@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt');
-var moment = require('moment');
-const { max } = require('moment');
+
 
 
 const userSchema = new mongoose.Schema
@@ -50,11 +49,18 @@ const userSchema = new mongoose.Schema
                 });
               });
             });
-          
-           
-const users = mongoose.model('users', userSchema)
 
-module.exports = {users}
+        userSchema.virtual('id').get(function () {
+    return this._id.toHexString();
+});
+
+userSchema.set('toJSON', {
+    virtuals: true,
+});  
+           
+const Users = mongoose.model('users', userSchema)
+
+module.exports = {Users}
 
 
 

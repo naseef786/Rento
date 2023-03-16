@@ -1,34 +1,24 @@
 
 const db = require("../config/server")
-const { users } = require("../model/user_Schema")
+const { Users } = require("../model/user_Schema")
+const { Category } = require("../model/category_Schema")
+const { Products } = require('../model/product_Shema')
 const bcrypt = require('bcrypt')
 
 
 
 
 const userLogin = (req,res)=>{
+    
     res.render("userLogin")
 }
 
 
-// const userSignup = async(req, res, next)=>{
-//     try{
-       
-//    const {name,email,mobile,password} = req.body;
-//    console.log(req.body);
-//     await users.create( { name,email ,mobile, password }).then((result)=>{
-        
-//     console.log(result);
-//   })
-//   }
-//  catch(err){
-// next(err);
-// }
-// }
+
 const userSignup = async(req, res, next)=>{
        try{
         console.log(req.body);
-        const user = new users({
+        const user = new Users({
             name:req.body.name,
             email:req.body.email,
             mobile:req.body.mobile,
@@ -36,7 +26,7 @@ const userSignup = async(req, res, next)=>{
         });
         user.save().then(result=>{
             console.log(result);
-            res.redirect('/');
+            res.redirect('/login');
         })
        }
        catch(err){
@@ -52,12 +42,14 @@ const postSignin = async(req, res) => {
     console.log(req.body);
     let Email = req.body.email;
     let PASS = req.body.password;
-    const user = await users.findOne({ email: Email})
+    const user = await Users.findOne({ email: Email})
     if (user){
         console.log(user);
         let data = await bcrypt.compare(PASS, user.password);
         console.log(data);
         if (data) {
+            req.session.userLogged = true;
+            req.session.user_id = user._id
             res.redirect('/');
         }
         else {
@@ -83,8 +75,16 @@ const postSignin = async(req, res) => {
 
 
 
-const homePage = (req,res)=>{
-    res.render("userHome")
+const homePage = async(req,res)=>{
+    try{
+   await Products.find().then((items)=>{
+    console.log(items);
+    res.render("userHome",{items})
+   })
+}catch{
+    res.status(500).send()
+}
+   
 }
 const contactPage = (req,res)=>{
     res.render("contact")
@@ -111,6 +111,12 @@ const faqPage = (req,res)=>{
 const viewProducts = (req,res)=>{
     res.render("product")
 }
+const userLogout = (req,res)=>{
+    req.session.destroy(err=>{
+        if(err)throw err;
+        res.redirect('/login')
+    })
+}
 
 
 
@@ -126,5 +132,6 @@ module.exports = {
     faqPage,
     viewProducts,
     userSignup,
-    postSignin
+    postSignin,
+    userLogout
 }

@@ -1,8 +1,7 @@
 
 
     <div class="page-wrapper">
-      
-
+       
         <main class="main">
             <div class="container">
                 <div class="row">
@@ -26,7 +25,7 @@
                                             <h3><span>Manage</span> Your products <span></span></h3><h4>here</h4>
                                         </div>
                                         <div class="action">
-                                            <a href="category.html">discover now</a>
+                                            <a href="/admin/addproduct">discover now</a>
                                         </div>
                                     </div>
                                 </div><!-- End .intro-slide -->
@@ -48,7 +47,8 @@
                                     <h3>Manage </h3> <h3 class="highlight">&nbsp;Your clients</h3>
                                 </div>
                                 <div class="action">
-                                    <a href="category.html">manage now</a>
+                                    <a href="/admin/adminviewusers">manage now</a>
+                                   
                                 </div>
                             </div>
                         </div>
@@ -61,7 +61,8 @@
                                     <h4>here</h4>
                                 </div>
                                 <div class="action">
-                                    <a href="category.html">manage now</a>
+                                    <a href="/admin/manageorders">manage now</a>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -74,7 +75,8 @@
                                     <h3>coupons</h3>
                                 </div>
                                 <div class="action">
-                                    <a href="category.html">Manage now</a>
+                                    <a href="/admin/managecoupons">Manage now</a>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -82,11 +84,196 @@
                 </div>
             </div>
         </main>
-        <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+          <div class="page-wrapper">
+
+        <main class="main">
+        	<div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+        		<div class="container">
+        			<h1 class="page-title">Admin Dashboard</h1><span>manage</span></h1>
+        		</div><!-- End .container -->
+        	</div><!-- End .page-header -->
+            <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
+                <div class="container">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/admin">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/">Shop</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">My Account</li>
+                    </ol>
+                </div><!-- End .container -->
+            </nav><!-- End .breadcrumb-nav -->
+
+            <div class="page-content">
+            	<div class="dashboard">
+	                <div class="container">
+	                	<div class="row">
+	                		<aside class="col-md-4 col-lg-3">
+	                			<ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
+								    <li class="nav-item">
+								        <a class="nav-link active" id="tab-addProduct-link" data-toggle="tab" href="#tab-updateProfile" role="tab" aria-controls="tab-addProduct" aria-selected="true">Update Profile</a>
+								    </li>
+								    <li class="nav-item">
+								        <a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-orders" role="tab" aria-controls="tab-orders" aria-selected="false">Orders</a>
+								    </li>
+								    <li class="nav-item">
+								        <a class="nav-link" id="tab-downloads-link" data-toggle="tab" href="#tab-addCategory" role="tab" aria-controls="tab-downloads" aria-selected="false">Add Category</a>
+								    </li>
+								    <li class="nav-item">
+								        <a class="nav-link" id="tab-address-link" data-toggle="tab" href="#tab-addCoupons" role="tab" aria-controls="tab-address" aria-selected="false">Add Coupons</a>
+								    </li>
+								    <li class="nav-item">
+								        <a class="nav-link" id="tab-account-link" data-toggle="tab" href="#tab-addProduct" role="tab" aria-controls="tab-account" aria-selected="false">Add Product</a>
+								    </li>
+								    <li class="nav-item">
+                                        <form action="/admin/logout" method="post">
+								       <button type="submit" class="btn btn-outline-primary-2">
+			                					<span>SIGN OUT</span>
+			            						<i class="icon-long-arrow-right"></i>
+			                				</button>
+                                        </form>
+								    </li>
+								</ul>
+	                		</aside><!-- End .col-lg-3 -->
+
+	                		<div class="col-md-8 col-lg-9">
+	                			<div class="tab-content">
+								    <div class="tab-pane fade show active" id="tab-updateProfile" role="tabpanel" aria-labelledby="tab-updateProfile-link">
+								    	<form action="#">
+		                					<label>Email address *</label>
+		        							<input type="email" class="form-control" required>
+
+		            						<label>Current password (leave blank to leave unchanged)</label>
+		            						<input type="password" class="form-control">
+
+		            						<label>New password (leave blank to leave unchanged)</label>
+		            						<input type="password" class="form-control">
+
+		            						<label>Confirm new password</label>
+		            						<input type="password" class="form-control mb-2">
+
+		                					<button type="submit" class="btn btn-outline-primary-2">
+			                					<span>SAVE CHANGES</span>
+			            						<i class="icon-long-arrow-right"></i>
+			                				</button>
+			                			</form>
+								    </div><!-- .End .tab-pane -->
+
+								    <div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
+								    	<p>No order has been made yet.</p>
+								    	<a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
+								    </div><!-- .End .tab-pane -->
+								     <div class="tab-pane fade" id="tab-addCategory" role="tabpanel" aria-labelledby="tab-addCategory-link">
+								    	<form action="/admin/addcategory" method="post" enctype="multipart/form-data" >
+			                				
+
+		            						<label>Category Name</label>
+		            						<input type="text" name="name" class="form-control" required>
+		            						<small class="form-text">specifies name of a Category</small>
+
+                                            <div class="form-group col-md-6">
+                                        <input type="file" name="image" class="form-control" id="inputGroupFile02">
+                                       <label class="input-group-text"  for="inputGroupFile02">Upload</label>
+                                          </div>
+		            						
+		                					<button type="submit" class="btn btn-outline-primary-2">
+			                					<span>SAVE CHANGES</span>
+			            						<i class="icon-long-arrow-right"></i>
+			                				</button>
+			                			</form>
+								    </div><!-- .End .tab-pane -->
+								    <div class="tab-pane fade" id="tab-addProduct" role="tabpanel" aria-labelledby="tab-addproduct-link">
+								    	<form action="/admin/addproduct" method="post" enctype="multipart/form-data">
+			                				<div class="row">
+			                					<div class="col-sm-6">
+			                						<label>Product Name *</label>
+			                						<input type="text" name="name" class="form-control" required>
+			                					</div><!-- End .col-sm-6 -->
+
+			                					<div class="col-sm-6">
+			                						<label>Category Name *</label>
+			                						<input type="text" name="category"  class="form-control" required>
+			                					</div><!-- End .col-sm-6 -->
+
+                                               <div class="col-sm-6">
+                                                  <input type="file" name="image" class="form-control" id="inputGroupFile02">
+                                                 <label class="input-group-text"  for="inputGroupFile02">Upload</label>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                  <label>Brand Name *</label>
+			                						<input type="text" name="brand" class="form-control" required>  
+                                                </div>
+			                				</div><!-- End .row -->
+		            						<label>Description</label>
+		            						<input type="text" class="form-control" name="description" required>
+		                					<label>Rich Description</label>
+		        							<input type="text" class="form-control" name="richdescription" required>
+                                             <label>isFeatured</label>
+		        							<input type="text" class="form-control" name="isFeatuered" required>                                             
+		            						<label>Price</label>
+		        							<input type="number" name="price" class="form-control" required>
+                                              <label>Product Count</label>
+		        							<input type="number" class="form-control" name="countinstock" required>                              
+		                					<button type="submit" class="btn btn-outline-primary-2">
+			                					<span>SAVE CHANGES</span>
+			            						<i class="icon-long-arrow-right"></i>
+			                				</button>
+			                			</form>
+								    </div><!-- .End .tab-pane -->
+                                     
+                                         <div class="tab-pane fade" id="tab-addCoupons" role="tabpanel" aria-labelledby="tab-addCoupons-link">
+								    	 <form action="/admin/addcoupon">
+			                			 <label>Coupon Name</label>
+			                			 <input type="text" class="form-control" required>
+                                         <div class="form-group col-md-6"> 
+                                         <input type="file" name="image" class="form-control" id="inputGroupFile02">
+                                         <label class="input-group-text"  for="inputGroupFile02">Upload</label>
+                                         </div>
+		                				 <button type="submit" class="btn btn-outline-primary-2">
+			                					<span>SAVE CHANGES</span>
+			            						<i class="icon-long-arrow-right"></i>
+			                			 </button>
+			                			</form>
+								        </div><!-- .End .tab-pane -->
+
+                                    <div class="tab-pane fade" id="tab-updateProfile" role="tabpanel" aria-labelledby="tab-updateProfile-link">
+								    	<form action="/admin/update/">
+		                					<label>Email address *</label>
+		        							<input type="email" class="form-control" required>
+
+		            						<label>Current password (leave blank to leave unchanged)</label>
+		            						<input type="password" class="form-control">
+
+		            						<label>New password (leave blank to leave unchanged)</label>
+		            						<input type="password" class="form-control">
+
+		            						<label>Confirm new password</label>
+		            						<input type="password" class="form-control mb-2">
+
+		                					<button type="submit" class="btn btn-outline-primary-2">
+			                					<span>SAVE CHANGES</span>
+			            						<i class="icon-long-arrow-right"></i>
+			                				</button>
+			                			</form>
+								    </div><!-- .End .tab-pane -->
+                                     
+								</div>
+	                		</div><!-- End .col-lg-9 -->
+	                	</div><!-- End .row -->
+	                </div><!-- End .container -->
+                </div><!-- End .dashboard -->
+            </div><!-- End .page-content -->
+        </main><!-- End .main -->
+
+        
+    </div><!-- End .page-wrapper -->
+    
+
+        <button id="scroll-top"  title="Back to Top"><i class="icon-arrow-up"></i></button>
     </div>
     
     <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+   
 
+   
 
     
 

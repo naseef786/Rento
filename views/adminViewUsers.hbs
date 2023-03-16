@@ -1,0 +1,52 @@
+<div class="container popular">
+                <hr class="mb-5">
+
+                <div class="section-title">
+                    <div><p class="title"><span>Users</span></p></div>
+                </div>
+
+                <div class="row products">
+                    {{#each user}}
+                    <div class="col-6 col-md-4 col-lg-3 col-xl-5col">
+                        
+                        <div class="product product-3 text-center">
+                            <figure class="product-media">
+                                
+                                <a href="{{this.id}}">
+                                </a>
+
+
+                            </figure><!-- End .product-media -->
+
+                            <div class="product-body">
+                                <div class="product-cat">
+                                    <a href="#">{{this.name}}</a>
+                                </div><!-- End .product-cat -->
+                                <h3 class="product-title"><a href="">{{this.email}}</a></h3><!-- End .product-title -->
+                                <div class="product-price">
+                                    <span class="new-price">{{this.mobile}}</span>
+                                    {{!-- <span class="old-price">Was 200 perday</span> --}}
+                                </div><!-- End .product-price -->
+                            </div><!-- End .product-body -->
+
+                            <div class="product-footer">
+                                <div class="ratings-container">
+                                  
+                                   
+                               
+
+                                <div class="product-action">
+                                     <a href="" class="btn-product btn-delete" title="delete"></a>
+                                    <a href="" class="btn-product btn-cart" title="Edit"></a>
+                                    
+                                </div><!-- End .product-action -->
+                            </div><!-- End .product-footer -->
+                        </div><!-- End .product -->
+                        
+                    </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
+                    
+                     
+                </div><!-- End .row -->
+               {{/each}}
+            </div>
+</div>
