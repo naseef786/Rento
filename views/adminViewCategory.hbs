@@ -1,60 +1,70 @@
-<div class="container popular">
-                <hr class="mb-5">
+ <div class="page-wrapper">
+    
 
-                <div class="section-title">
-                    <div><p class="title"><span>Popular Products</span></p></div>
-                    
-                    <a class="link" href="#">See All Products</a>
-                </div>
+<main class="main">
+        	<div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+        		<div class="container">
+        			<h1 class="page-title">admin<span>categories</span></h1>
+        		</div><!-- End .container -->
+        	</div><!-- End .page-header -->
+            <nav aria-label="breadcrumb" class="breadcrumb-nav">
+                <div class="container">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/admin">Home</a></li>
+                      
+                        <li class="breadcrumb-item active" aria-current="page">Categories</li>
+                    </ol>
+                </div><!-- End .container -->
+            </nav><!-- End .breadcrumb-nav -->
 
-                <div class="row products">
-                    {{#each products}}
-                    <div class="col-6 col-md-4 col-lg-3 col-xl-5col">
-                        <div class="product product-3 text-center">
-                            <figure class="product-media">
-                                <span class="product-label label-sale">Sale</span>
-                                <a href="product.html">
-                                    <img src="assets/images/demos/demo-22/products/product-1.jpg" alt="Product image" class="product-image">
-                                </a>
+            <div class="page-content">
+            	<div class="container">
+					<table class="table table-wishlist table-mobile">
+						<thead>
+							<tr>
+								<th>Category Image</td>
+                                <th>Name</th>
+                                <th></th>
+								<th>Edit</th>
+                                <th>Delete</th>
+							</tr>
+						</thead>
 
-                                <div class="product-action-vertical">
-                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                </div><!-- End .product-action-vertical -->
-                            </figure><!-- End .product-media -->
+						<tbody>
+							{{#each categories}}
+							<tr>
+								<td class="product-col">
+									<div class="product">
+										<figure class="product-media">
+											<a href="/admin/viewproductsC/{{this.id}}">
+												<img src="/../{{this.image}}" alt="Product image">
+											</a>
+										</figure>
 
-                            <div class="product-body">
-                                <div class="product-cat">
-                                    <a href="#">Air Tools & Compressors</a>
-                                </div><!-- End .product-cat -->
-                                <h3 class="product-title"><a href="product.html">Makita XCV11Z</a></h3><!-- End .product-title -->
-                                <div class="product-price">
-                                    <span class="new-price">$158.40</span>
-                                    <span class="old-price">Was $330.00</span>
-                                </div><!-- End .product-price -->
-                            </div><!-- End .product-body -->
-
-                            <div class="product-footer">
-                                <div class="ratings-container">
-                                    <div class="ratings">
-                                        <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
-                                    </div><!-- End .ratings -->
-                                    <span class="ratings-text">( 4 Reviews )</span>
-                                </div><!-- End .rating-container -->
-
-                                <div class="product-nav product-nav-dots">
-                                    <a href="#" class="active" style="background: #af5f23;"><span class="sr-only">Color name</span></a>
-                                    <a href="#" style="background: #806f55;"><span class="sr-only">Color name</span></a>
-                                    <a href="#" style="background: #333333;"><span class="sr-only">Color name</span></a>
-                                </div><!-- End .product-nav -->
-
-                                <div class="product-action">
-                                    <a href="#" class="btn-product btn-cart" title="Add to cart"></a>
-                                    <a href="popup/quickView.html" class="btn-product btn-quickview" title="Quick view"></a>
-                                </div><!-- End .product-action -->
-                            </div><!-- End .product-footer -->
-                        </div><!-- End .product -->
-                    </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
-                    {{/eeach}}
-                    
-                </div><!-- End .row -->
-            </div>
+										
+									</div><!-- End .product -->
+								</td>
+                          
+                                <td class="title-col">{{this.name}}</td>
+							
+                           
+								
+								<td class="Ed-col">
+									{{!-- <form action="/addtocart/{{this.id}}" method="post">
+									<button class="btn btn-block btn-outline-primary-2"><i class="icon-cart-plus"></i>Add to Cart</button>
+				                   </form>				 --}}
+								</td>
+								
+                                <td class="Edit-col"><a href="/admin/editcat/{{this.id}}" class="text-success"><i class="fas fa-edit fa-lg mx-1"></i></a></td>
+                                <td class="Delete-col"> <a href="/admin/deleteCat/{{this.id}}" class="text-danger"><i class="fas fa-trash fa-lg mx-1"></i></a></td>
+							</tr>
+							{{/each}}
+							
+						</tbody>
+					</table><!-- End .table table-wishlist -->
+	        
+            	</div><!-- End .container -->
+            </div><!-- End .page-content -->
+			
+        </main><!-- End .main -->
+</div>

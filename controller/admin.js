@@ -5,27 +5,47 @@ const { Admin } = require('../model/admin_Schema')
 const { Products } = require('../model/product_Shema')
 const { Users } = require("../model/user_Schema")
 const { Category } = require('../model/category_Schema')
-
+const fs = require('fs')
 const adminlog = (req,res)=>{
-        res.render('adminLogin');
+        res.render('adminLogin',{layout:'/partials/layout'});
     }
 
 
-const adminAddProduct = (req,res)=>{
+const adminAddProduct = async(req,res)=>{
+    console.log(req.body);
+    let Categories = req.body.category;
+    console.log(Categories);
+          const category = await Category.findOne({name:Categories})
+           if(!category){
+            console.log("category invalid");
+           }
+    if(category){
+   let data = category.id.toString();
     const product = new Products ({
-        image:req.file.filename,
-        name:req.body.name,
-        price:req.body.price,
-        discription:req.body.discription
+        
+        name: req.body.name,
+        description: req.body.description,
+        richDescription: req.body.richDescription,
+        brand: req.body.brand,
+        image: req.file.filename,
+        price: req.body.price,
+        category: data,
+        countInStock: req.body.countInStock,
+        rating: req.body.rating,
+        numReviews: req.body.numReviews,
+        isFeatured: req.body.isFeatured,
   
     });
         product.save().then((productsadded)=>{
         res.redirect('/admin'),
         console.log(productsadded);
-    })
+    })}
 }
-const adminHome = (req,res)=>{
-    res.render("adminHome");
+const adminHome = async(req,res)=>{
+    await Category.find().then(data=>{
+        res.render("adminHome",{data,layout:'/partials/layout'});
+    })
+   
 }
 const adminLogin = async(req, res) => {
     try{
@@ -77,7 +97,7 @@ const adminSignup = async(req, res, next)=>{
   const adminViewProduct = async(req,res)=>{
         await Products.find().then((items)=>{
      console.log(items);
-     res.render('addProduct',{items})
+     res.render('adminViewProduct',{items,layout:'/partials/layout'})
   })
         
   }
@@ -86,7 +106,7 @@ const adminSignup = async(req, res, next)=>{
   const adminViewUsers = async(req,res)=>{
     await Users.find().then((user)=>{
  console.log(user);
- res.render('adminViewUsers',{user})
+ res.render('adminViewUsers',{user,layout:'/partials/layout'})
 })}
   
 const adminLogout = (req,res)=>{
@@ -113,53 +133,103 @@ const addCategory = async(req,res)=>{
 
 const editProduct = (req,res)=>{
     let id = req.params.id;
-    Products.findById(id).then((product)=>{
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render('edit',{product})
-        }
-    })
-}
+    Products.findById(id).then(product=>{
+        
+            res.render('adminEditProduct',{product,layout:'/partials/layout'})
+        })
+    }
+
 const editCategory = (req,res)=>{
     let id = req.params.id;
     Category.findById(id).then((category)=>{
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render('edit',{category})
-        }
-    })
-}
+       
+            res.render('adEditCat',{category,layout:'/partials/layout'})
+        })
+    }
+
+
 const adminViewCategory =(req,res)=>{
     Category.find().then(categories=>{
-        if(err){
-            res.json({message:err.message})
-        }
-        else{
-            res.render('adminviewcategory',{categories})
-        }
+        
+            res.render('adminviewcategory',{categories,layout:'/partials/layout'})
+        
     })
 }
 
 const deleteProduct = (req,res)=>{
     let id = req.params.id;
+    console.log(id);
     Products.findByIdAndRemove(id).then(result=>{
-        if(err){console.log(err);}
-        else{console.log(result);}
+       
+        console.log(result);
         res.redirect("/admin/adminviewproducts");
     });
 }
 const deleteCategory = (req,res)=>{
     let id = req.params.id;
     Category.findByIdAndRemove(id).then(result=>{
-        if(err){console.log(err);}
-        else{console.log(result);}
-        res.redirect("/admin/adminviewcategory");
+       
+        console.log(result);
+        res.redirect("/admin/adminviewcategories");
     });
 }
+const listProducts = async (req, res) => {
+    try{
+        let id = req.params.id;
+        console.log(id);
+        const product_list = await Products.find({category:id})
+        console.log(product_list)
+        res.render("adminViewCat",{product_list,layout:'/partials/layout'}); 
+      
+    }
+    catch(err){
+      console.log(err);
+    }
+  }
+  const updateProduct = async(req,res)=>{
+    let new_image = "";
+
+    if (req.file) {
+        new_image = req.file.filename;
+        try {
+            fs.unlinkSync("./public/images/uploads" + req.body.old_image);
+        } catch (err) {
+            console.log(err);
+        }
+    } else {
+        new_image = req.body.old_image;
+    }
+    let featured = req.body.isFeatured;
+
+  let id = req.params.id;
+    Products.findByIdAndUpdate(id,{
+        name: req.body.name,
+        description: req.body.description,
+        richDescription: req.body.richDescription,
+        brand: req.body.brand,
+        image: new_image,
+        price: req.body.price,
+        category:  req.body.category,
+        countInStock: req.body.countInStock,
+        rating: req.body.rating,
+        numReviews: req.body.numReviews,
+        isFeatured: Boolean(featured),
+    }).then(data=>{console.log(data,'lkjgvldkdfjgvlkdjgkrjfgokrjrkojrddedrdf');
+    res.redirect('/admin/adminviewproducts')})
+}
+
+
+
+  const updateCategory = async(req,res)=>{
+let id = req.params.id ;
+await Category.findByIdAndUpdate(id,{
+    name:req.params.name,
+    image:req.body.image    
+}).then(data=>{
+    console.log(data);
+    res.redirect('/admin/adminviewcategories')
+})
+  }
 
 module.exports = {
     adminLogin,
@@ -175,6 +245,9 @@ module.exports = {
     editProduct,
     deleteProduct,
     deleteCategory,
-    adminViewCategory
+    adminViewCategory,
+    listProducts,
+    updateCategory,
+    updateProduct,
     
 }

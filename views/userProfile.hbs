@@ -11,8 +11,8 @@
             <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
                 <div class="container">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item"><a href="#">Shop</a></li>
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                       
                         <li class="breadcrumb-item active" aria-current="page">My Account</li>
                     </ol>
                 </div><!-- End .container -->
@@ -24,15 +24,11 @@
 	                	<div class="row">
 	                		<aside class="col-md-4 col-lg-3">
 	                			<ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
-								    <li class="nav-item">
-								        <a class="nav-link active" id="tab-dashboard-link" data-toggle="tab" href="#tab-dashboard" role="tab" aria-controls="tab-dashboard" aria-selected="true">Dashboard</a>
-								    </li>
+								   
 								    <li class="nav-item">
 								        <a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-orders" role="tab" aria-controls="tab-orders" aria-selected="false">Orders</a>
 								    </li>
-								    <li class="nav-item">
-								        <a class="nav-link" id="tab-downloads-link" data-toggle="tab" href="#tab-downloads" role="tab" aria-controls="tab-downloads" aria-selected="false">Downloads</a>
-								    </li>
+								    
 								    <li class="nav-item">
 								        <a class="nav-link" id="tab-address-link" data-toggle="tab" href="#tab-address" role="tab" aria-controls="tab-address" aria-selected="false">Adresses</a>
 								    </li>
@@ -40,7 +36,10 @@
 								        <a class="nav-link" id="tab-account-link" data-toggle="tab" href="#tab-account" role="tab" aria-controls="tab-account" aria-selected="false">Account Details</a>
 								    </li>
 								    <li class="nav-item">
-								        <a class="nav-link" href="#">Sign Out</a>
+										 <form action="/logout" method="post">
+                                   <button  type="submit"> Sign Out </button>
+                                     </form>
+
 								    </li>
 								</ul>
 	                		</aside><!-- End .col-lg-3 -->
@@ -58,10 +57,7 @@
 								    	<a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
 								    </div><!-- .End .tab-pane -->
 
-								    <div class="tab-pane fade" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
-								    	<p>No downloads available yet.</p>
-								    	<a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
-								    </div><!-- .End .tab-pane -->
+								    
 
 								    <div class="tab-pane fade" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
 								    	<p>The following addresses will be used on the checkout page by default.</p>
@@ -95,30 +91,30 @@
 								    		</div><!-- End .col-lg-6 -->
 								    	</div><!-- End .row -->
 								    </div><!-- .End .tab-pane -->
-
+                                     {{#with data}}
 								    <div class="tab-pane fade" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
-								    	<form action="#">
-			                				<div class="row">
+								    	<form action="/updateprofile/{{this.id}}">
+			                				{{!-- <div class="row">
 			                					<div class="col-sm-6">
-			                						<label>First Name *</label>
-			                						<input type="text" class="form-control" required>
+			                						<label >name</label>
+			                						<input type="text" value="{{this.name}}" class="form-control" required>
 			                					</div><!-- End .col-sm-6 -->
 
 			                					<div class="col-sm-6">
 			                						<label>Last Name *</label>
-			                						<input type="text" class="form-control" required>
+			                						<input type="email;" class="form-control" required>
 			                					</div><!-- End .col-sm-6 -->
-			                				</div><!-- End .row -->
+			                				</div><!-- End .row --> --}}
 
-		            						<label>Display Name *</label>
-		            						<input type="text" class="form-control" required>
+		            						<label>USER NAME</label>
+		            						<input type="text" value="{{this.name}}" class="form-control" required>
 		            						<small class="form-text">This will be how your name will be displayed in the account section and in reviews</small>
 
-		                					<label>Email address *</label>
-		        							<input type="email" class="form-control" required>
+		                					<label>Email address </label>
+		        							<input type="email" value="{{this.email}}" class="form-control" required>
 
 		            						<label>Current password (leave blank to leave unchanged)</label>
-		            						<input type="password" class="form-control">
+		            						<input type="password" value="this.password" class="form-control">
 
 		            						<label>New password (leave blank to leave unchanged)</label>
 		            						<input type="password" class="form-control">
@@ -132,6 +128,7 @@
 			                				</button>
 			                			</form>
 								    </div><!-- .End .tab-pane -->
+									{{/with}}
 								</div>
 	                		</div><!-- End .col-lg-9 -->
 	                	</div><!-- End .row -->

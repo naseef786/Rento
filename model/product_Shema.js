@@ -4,10 +4,6 @@ const productSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    image:{
-        type:String,
-        default:''
-    },
     name:{
         type:String,
         required:true
@@ -39,24 +35,28 @@ const productSchema = new mongoose.Schema({
         min:0,
         max:250,
     },
-    rating:{
-        type:Number,
-        default:0
-    },
-    numReviews:{
-        type:Number,
-        default:0,
-    },
     isFeatured:{
         type:Boolean,
-        default:false,
+        default: false,
     },
     dateCreated:{
         type:Date,
         default:Date.now,
-    }
+    },
+    wishList:[ {
+        user_id: {
+          type: mongoose.Schema.Types.ObjectId,
+            ref: 'users',
+        }
+    }]
 
 });
+productSchema.pre('save', function(next) {
+    if (typeof this.isFeatured === 'string') {
+      this.isFeatured = this.isFeatured.toLowerCase() === 'true';
+    }
+    next();
+  });
 productSchema.virtual('id').get(function () {
     return this._id.toHexString();
 });

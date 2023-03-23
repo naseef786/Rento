@@ -10,11 +10,17 @@ const {
   adminSignup,
   adminHome,
   adminAddProduct,
-  viewAddProduct,
   adminViewUsers,
   adminLogout,
   addCategory,
-  adminViewCategory
+  adminViewCategory,
+  deleteProduct,
+  listProducts,
+  deleteCategory,
+  editProduct,
+  editCategory,
+  updateCategory,
+  updateProduct
 
   
   
@@ -35,9 +41,15 @@ router.post('/addcategory',multer.single("image"),addCategory)
 router.get('/admin',ifAdmin,adminViewProduct)
 router.get('/adminviewusers',adminViewUsers)
 router.post('/logout',adminLogout)
+router.get('/productedit/:id',editProduct)
 
-
-router.get('/adminviewcategory',adminViewCategory)
+router.get('/adminviewcategories',adminViewCategory)
+router.get('/delete/:id',deleteProduct)
+router.get('/deleteCat/:id',deleteCategory)
+router.get('/editcat/:id',editCategory)
+router.get('/viewproductsC/:id',listProducts)
+router.post('/updatecategory/:id',multer.single("image"),updateCategory)
+router.post('/updateproduct/:id',multer.single("image"),updateProduct)
 
 
 module.exports = router;

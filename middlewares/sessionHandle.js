@@ -22,6 +22,12 @@ const ifUserLogout = async (req,res,next)=>{
     }
     next()
    }
+const ifCart = (req, res, next) => {
+    if (!req.session.cart) {
+      req.session.cart = [];
+    }
+    next();
+  };
 
 
 // const ifAdminAxios= async(req,res,next)=>{
@@ -77,5 +83,5 @@ const ifAdminLogout = async (req,res,next)=>{
  }
  next()
 }
-module.exports={ ifAdmin,ifUser,ifAdminLogout,ifUserLogout}
+module.exports={ ifAdmin,ifUser,ifAdminLogout,ifUserLogout,ifCart}
 // ifUserAxios,ifAdminAxios

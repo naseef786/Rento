@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt');
-
+const moment = require('moment')
 
 
 const userSchema = new mongoose.Schema
@@ -26,6 +26,66 @@ const userSchema = new mongoose.Schema
                   max:(20)
                  
                 },
+                cart: [{
+                  product: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'products'
+                  },
+                  quantity: {
+                    type: Number,
+                    default: 1
+                  },
+                  price:{
+                      type:Number,
+                      default:0
+                  }
+                }],
+                wishList: [
+      
+                  {
+                      productId: {
+                        type: mongoose.Schema.Types.ObjectId,
+                          ref: 'products',
+                      }
+                  }
+              ],
+              address: [
+                {
+                    default: {
+                        type: Boolean,
+                        default: false
+                    },
+                    firstname: {
+                        type: String,
+                        required: true
+                    },
+                    lastname: {
+                        type: String,
+                        required: true
+                    },
+                    address: {
+                        type: String,
+                        required: true
+                    },
+                    city: {
+                        type: String,
+                        required: true
+                    },
+                    state: {
+                        type: String,
+                        required: true
+                    },
+                    pincode: {
+                        type: Number,
+                        required: true
+                    },
+                    phone: {
+                        type: Number,
+                        required: true
+                    }
+                }
+            ],
+               
             });
 
             userSchema.pre('save', function(next) {
