@@ -55,18 +55,26 @@
                                     
 
                                  
-
+                                      <form action="/addtocart/{{this.id}}" method="post">
                                     <div class="details-filter-row details-row-size">
-                                        <label for="qty">Qty:</label>
+                                         
+                                        <label for="qty">Quantity:</label>
                                         <div class="product-details-quantity">
-                                            <input type="number" id="qty" class="form-control" value="1" min="1" max="10" step="1" data-decimals="0" required>
+                                            <input type="number" id="qty" name="quantity" class="form-control" value="1" min="1" max="10" step="1" data-decimals="0" required>
+                                        </div><!-- End .product-details-quantity -->
+                                    </div><!-- End .details-filter-row -->
+                                    <div class="details-filter-row details-row-size">
+                                         
+                                        <label for="qty">Days For Rent:</label>
+                                        <div class="product-details-quantity">
+                                            <input type="number" id="days" name="daysofrent" class="form-control" value="1" min="1" max="10" step="1" data-decimals="0" required>
                                         </div><!-- End .product-details-quantity -->
                                     </div><!-- End .details-filter-row -->
 
                                     <div class="product-details-action">
 
-                                       <form action="/addtocart/{{this.id}}" method="post">
-                                   <button class="btn-product btn-cart" type="submit"> ADD </button>
+                                     
+                                   <button class="btn-product btn-cart" type="submit"> ADD To Cart </button>
                                      </form>
 
                                         <div class="details-action-wrapper">

@@ -1,0 +1,587 @@
+ <section class="md" style="padding-top: 20px;">
+        <div class="container">
+          <div class="row">
+            
+
+            <!-- left pannel section -->
+            <div class="col-lg-9 col-12 pe-lg-2-3 mb-1-9 mb-lg-0">
+
+              <div class="common-block ">
+
+                <div class="inner-title">
+                  <h4 class="mb-0">Billing Address</h4>
+                  <p>
+
+                    <button
+                      class="btn btn-light mt-4"
+                      type="button"
+                      data-toggle="collapse"
+                      data-target="#collapseExample"
+                      aria-expanded="false"
+                      aria-controls="collapseExample"
+                    >
+                      Add new address
+                    </button>
+                  </p>
+                  <div class="collapse" id="collapseExample">
+                    <div class="card card-body">
+                    <form id="newAddress" >
+
+                        <div class="row">
+
+                          <div class="col-sm-6">
+
+                            <div class="form-group">
+                              <label>First Name</label>
+                              <input
+                              id="firstName"
+                                type="text"
+                                class="form-control"
+                                name="firstName"
+                                placeholder="Your name here"
+                              />
+                            </div>
+
+                          </div>
+
+                          <div class="col-sm-6">
+
+                            <div class="form-group">
+                              <label>Last Name</label>
+                              <input
+                              id="lastName"
+                                type="text"
+                                class="form-control"
+                                name="lastName"
+                                placeholder="Your last name here"
+                              />
+                            </div>
+
+                          </div>
+
+                        </div>
+
+                        <div class="row">
+
+                          <div class="col-sm-6">
+
+                            <div class="form-group">
+                              <label>Email Address</label>
+                              <input
+                              id="email"
+                                type="email"
+                                class="form-control"
+                                name="email"
+                                placeholder="Your email address here"
+                              />
+                            </div>
+
+                          </div>
+
+                          <div class="col-sm-6">
+
+                            <div class="form-group">
+                              <label>Phone</label>
+                              <input
+                              id="phone"
+                                type="text"
+                                class="form-control"
+                                name="phone"
+                                placeholder="Your phone number here"
+                              />
+                            </div>
+
+                          </div>
+
+                        </div>
+
+                        <div class="row">
+
+                          <div class="col-sm-6">
+
+                            <div class="form-group">
+                              <label>State</label>
+                              <input
+                              id="state"
+                                type="text"
+                                class="form-control"
+                                name="state"
+                                placeholder="Your company name here"
+                              />
+                            </div>
+
+                          </div>
+
+                          <div class="col-sm-6">
+
+                            <div class="form-group">
+                              <label>Country</label>
+                              <input
+                               id="country"
+                                type="text"
+                                class="form-control"
+                                name="country"
+                                placeholder="Your company name here"
+                              />
+                              </select>
+                            </div>
+
+                          </div>
+
+                        </div>
+
+                        <div class="row">
+
+                          <div class="col-sm-6">
+
+                            <div class="form-group">
+                              <label>City / Town </label>
+                              <input
+                              id="city"
+                                type="text"
+                                class="form-control"
+                                name="city"
+                                placeholder="Your city name here"
+                              />
+                            </div>
+
+                          </div>
+
+                          <div class="col-sm-6">
+
+                            <div class="form-group">
+                              <label>Zip Code</label>
+                              <input
+                              id="zipcode"
+                                type="text"
+                                class="form-control"
+                                name="zipcode"
+                                placeholder="Your zip code here"
+                              />
+                            </div>
+
+                          </div>
+
+                        </div>
+
+                        <div class="row">
+
+                          <div class="col-sm-6">
+
+                            <div class="form-group">
+                              <label> Street</label>
+                              <input
+                              id="street"
+                                type="text"
+                                class="form-control"
+                                name="street"
+                                placeholder="Your address here"
+                              />
+                            </div>
+
+                          </div>
+
+                          <div class="col-sm-6">
+
+                            <div class="form-group">
+                              <label>Address</label>
+                              <input
+                              id="address"
+                                type="text"
+                                class="form-control"
+                                name="address"
+                                placeholder="Your address here"
+                              />
+                            </div>
+
+                          </div>
+
+                        </div>
+
+    
+
+                       
+
+                        <div class="buttons-set">
+                
+                         <button type="submit" class="btn btn-primary">Submit</button> 
+
+                        </div>
+
+                      </form>
+                    </div>
+                  </div>
+                  
+                </div>
+                
+                  <h4 class="mb-0">Choose Address </h4>
+                  <p>
+            <button
+                      class="btn btn-light mt-4"
+                      type="button"
+                      data-toggle="collapse"
+                      data-target="#collapseExample1"
+                      aria-expanded="false"
+                      aria-controls="collapseExample"
+                    >
+                      Choose Your Address
+                    </button>
+                    </p>
+                  <div class="collapse" id="collapseExample1">
+                    <div class="card card-body">
+                      <form id="procceed" method="post" action="/order">
+                      <div class="row" id="userAddresses">
+                        {{#each userList.address}}
+                        <div class="col-sm-6" id="hide{{this._id}}">
+                      <div class="form-check">
+                        
+
+                          
+                        
+  <input class="form-check-input" type="radio" name="exampleRadios" id="{{this._id}}" value="{{this._id}}">
+  <label class="form-check-label" for="{{this._id}}">
+    <h6>{{this.firstName}} {{this.lastName}} <i style="font-size:18px;margin-left: 10px;"  onclick="edit('{{this._id}}')" class="fa">&#xf044;</i> <i class="fa fa-trash" onclick="deleteAddress('{{this._id}}')" style="font-size:18px;color:red; margin-left: 7px;" ></i></h6>
+  
+   <p>{{this.address}} <br> {{this.street}} {{this.city}} <br> {{this.state}} {{this.country}} {{this.zipCode}} <br>{{this.phone}} </p>
+  </label>
+</div>
+</div>
+{{/each}}
+</div>
+                    </div>
+                  </div>
+                  
+                
+                    
+              </div>
+              
+            </div>
+            <!-- end left pannel section -->
+
+            <!-- right pannel section -->
+            <div class="col-lg-3 col-12 side-bar">
+
+              <div class="widget">
+
+                <div class="widget-title">
+                  <h5>Order Summary</h5>
+                </div>
+
+                <table class="table classic">
+                  <tbody>
+                    <tr>
+                      <th>Cart Subtotal:</th>
+                      <td class="text-gray-dark">MRP₹{{subTotalPrice}}</td>
+                    </tr>
+                    
+                    {{!-- <tr>
+                      <th>Shipping:</th>
+                      <td class="text-gray-dark">$26.50</td>
+                    </tr>
+                    <tr> --}}
+                      <th>Coupon Discount:</th>
+                      <td class="text-gray-dark">MRP₹{{discount}}</td>
+                    </tr>
+                    <tr>
+                      <th>Total:</th>
+                      <td class="text-lg text-gray-dark" id="totalPrice">MRP₹{{totalPrice}}</td>
+                    </tr>
+                    
+                     <tr>
+                      <th><label class="form-check-label" for="flexCheckChecked">
+   Pay Via PayPal
+  </label></th>
+                      <td class="text-lg text-gray-dark"><div class="form-check">
+  <input class="form-check-input" type="radio"  name="flexCheck" id="flexCheckChecked" value="online" >
+  
+</div></td>
+                    </tr>
+                    <tr>
+                      <th><label class="form-check-label" for="flexCheckChecked">
+   Cash on Delivery
+  </label></th>
+                      <td class="text-lg text-gray-dark"><div class="form-check">
+  <input class="form-check-input" type="radio" value="COD" onclick="display()" name="flexCheck" id="flexCheckChecked" checked>
+  
+</div></td>
+                    </tr>
+                 
+            
+                    <tr>
+                      <th><label class="form-check-label" for="flexCheckChecked">
+   Wallet
+  </label>
+  <label class="form-check-label" for="flexCheckChecked">
+  {{!-- Balance:₹{{userList.walletBalance}} --}}
+  </label>
+  </th>
+                      <td class="text-lg text-gray-dark"><div class="form-check">
+  <input class="form-check-input" type="radio"  name="flexCheck" id="flexCheckChecked" onclick="display()" value="wallet" >
+  
+</div></td>
+                    </tr>
+           <tr>
+                      <th><label class="form-check-label" for="flexCheckChecked">
+   Wallet + Paypal
+  </label></th>
+                      <td class="text-lg text-gray-dark"><div class="form-check">
+  <input class="form-check-input" type="radio"  name="flexCheck" id="flexCheckChecked" value="wallet+paypal" >
+  
+</div></td>
+                    </tr>  
+               
+                  </tbody>
+                </table>
+                <div  id="paypal-button-container" class="mt-3">
+
+                </div>
+               
+  
+  {{!-- <button class="btn btn-primary btn-block" type="button" data-toggle="collapse" data-target="#collapseExample5" aria-expanded="false" aria-controls="collapseExample">
+    CHOOSE PAYMENT METHOD
+  </button> --}}
+
+{{!-- <div class="collapse" id="collapseExample5">
+  <div class="card card-body">
+    <div class="form-check">
+      <label class="form-check-label" for="flexCheckChecked">
+   Wallet + Paypal
+  </label>
+  </div>
+  <input class="form-check-input " style="margin-left:10px;margin-top:7px"  type="radio"  name="flexCheck" id="flexCheckChecked" value="online" >
+  
+  
+    <div class="form-check">
+      <label class="form-check-label" for="flexCheckChecked">
+   Wallet + Paypal
+  </label>
+  </div>
+  <input class="form-check-input " style="margin-left:10px;margin-top:7px"  type="radio"  name="flexCheck" id="flexCheckChecked" value="online" >
+  
+  </div>
+</div> --}}
+                
+<button  type="submit"  class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer mt-3" id="placeOrder">
+							Place Order
+						</button>
+              </div>
+              
+            </div>
+            <!-- end right pannel section -->
+          </div>
+        </div>
+        </form>
+        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+        <button type="button" class="close" onclick="closemodal()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" >
+        <div class="card card-body">
+                    <form id="modalAddress" >
+
+                        <div class="row">
+
+                          <div class="col-sm-6" style="height: 80px;">
+
+                            <div class="form-group" >
+                              <label>First Name</label>
+                              <input
+                              id="modalfirstName"
+                                type="text"
+                                class="form-control"
+                                name="firstName"
+                                placeholder="Your name here"
+                              />
+                            </div>
+
+                          </div>
+
+                          <div class="col-sm-6" style="height: 80px;">
+
+                            <div class="form-group">
+                              <label>Last Name</label>
+                              <input
+                              id="modallastName"
+                                type="text"
+                                class="form-control"
+                                name="lastName"
+                                placeholder="Your last name here"
+                              />
+                            </div>
+
+                          </div>
+
+                        </div>
+
+                        <div class="row">
+
+                          <div class="col-sm-6" style="height: 80px;">
+
+                            <div class="form-group">
+                              <label>Email Address</label>
+                              <input
+                              id="modalemail"
+                                type="email"
+                                class="form-control"
+                                name="email"
+                                placeholder="Your email address here"
+                              />
+                            </div>
+
+                          </div>
+
+                          <div class="col-sm-6" style="height: 80px;">
+
+                            <div class="form-group">
+                              <label>Phone</label>
+                              <input
+                              id="modalphone"
+                                type="text"
+                                class="form-control"
+                                name="phone"
+                                placeholder="Your phone number here"
+                              />
+                            </div>
+
+                          </div>
+
+                        </div>
+
+                        <div class="row">
+
+                          <div class="col-sm-6"style="height: 80px;">
+
+                            <div class="form-group">
+                              <label>State</label>
+                              <input
+                              id="modalstate"
+                                type="text"
+                                class="form-control"
+                                name="state"
+                                placeholder="Your company name here"
+                              />
+                            </div>
+
+                          </div>
+
+                          <div class="col-sm-6" style="height: 80px;">
+
+                            <div class="form-group">
+                              <label>Country</label>
+                              <input
+                               id="modalcountry"
+                                type="text"
+                                class="form-control"
+                                name="country"
+                                placeholder="Your company name here"
+                              />
+                              </select>
+                            </div>
+
+                          </div>
+
+                        </div>
+
+                        <div class="row">
+
+                          <div class="col-sm-6" style="height: 80px;">
+
+                            <div class="form-group">
+                              <label>City / Town </label>
+                              <input
+                              id="modalcity"
+                                type="text"
+                                class="form-control"
+                                name="city"
+                                placeholder="Your city name here"
+                              />
+                            </div>
+
+                          </div>
+
+                          <div class="col-sm-6" style="height: 80px;">
+
+                            <div class="form-group">
+                              <label>Zip Code</label>
+                              <input
+                              id="modalzipcode"
+                                type="text"
+                                class="form-control"
+                                name="zipcode"
+                                placeholder="Your zip code here"
+                              />
+                            </div>
+
+                          </div>
+
+                        </div>
+
+                        <div class="row">
+
+                          <div class="col-sm-6" style="height: 80px;">
+
+                            <div class="form-group">
+                              <label> Street</label>
+                              <input
+                              id="modalstreet"
+                                type="text"
+                                class="form-control"
+                                name="street"
+                                placeholder="Your address here"
+                              />
+                            </div>
+
+                          </div>
+
+                          <div class="col-sm-6" style="height: 80px;">
+
+                            <div class="form-group">
+                              <label>Address</label>
+                              <input
+                              id="modaladdress"
+                                type="text"
+                                class="form-control"
+                                name="address"
+                                placeholder="Your address here"
+                              />
+                            </div>
+
+                          </div>
+                          <div class="col-sm-6" style="height: 10px;">
+                          <div class="form-group">
+                              
+                              <input
+                              id="modalId"
+                                type="text"
+                                class="form-control"
+                                name="id"
+                                style="display:none;"
+                              />
+                            </div>
+
+                          </div>
+
+                        </div>
+
+    
+
+                       
+
+                       
+
+                      </form>
+                    </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary"  onclick="closemodal()" >Close</button>
+        <button type="button" class="btn btn-primary" onclick="updateAddress()" >Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+      </section>

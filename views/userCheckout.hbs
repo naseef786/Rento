@@ -10,8 +10,8 @@
             <nav aria-label="breadcrumb" class="breadcrumb-nav">
                 <div class="container">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item"><a href="#">Shop</a></li>
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/">Shop</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Checkout</li>
                     </ol>
                 </div><!-- End .container -->
@@ -22,23 +22,36 @@
 	                <div class="container">
             			<div class="checkout-discount">
             				<form action="#">
-        						<input type="text" class="form-control" required id="checkout-discount-input">
-            					<label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to enter your code</span></label>
-            				</form>
+        						
+								{{#if couponData}}
+								{{#with couponData }}
+						         <h5>coupon {{this.couponCode}}applied successfully</h5>
+            				    {{/with}}
+							
+								
+{{!-- 								
+									<label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to enter your code</span></label>
+									<input type="text" class="form-control" required id="checkout-discount-input">
+                             --}}
+								{{else}}
+                                 <h6>coupons are not available for your order</h6>
+								 {{/if}}
+								
+							</form>
             			</div><!-- End .checkout-discount -->
-            			<form action="#">
+            			<form action="/placeOrder" >
 		                	<div class="row">
 		                		<div class="col-lg-9">
 		                			<h2 class="checkout-title">Billing Details</h2><!-- End .checkout-title -->
 		                				<div class="row">
 		                					<div class="col-sm-6">
 		                						<label>First Name *</label>
-		                						<input type="text" class="form-control" required>
+		                						<input type="text" name="firstname"  class="form-control" required>
 		                					</div><!-- End .col-sm-6 -->
 
 		                					<div class="col-sm-6">
 		                						<label>Last Name *</label>
-		                						<input type="text" class="form-control" required>
+		                						<input type="text" name="lastname" class="form-control" required>
 		                					</div><!-- End .col-sm-6 -->
 		                				</div><!-- End .row -->
 
@@ -46,85 +59,82 @@
 	            						<input type="text" class="form-control">
 
 	            						<label>Country *</label>
-	            						<input type="text" class="form-control" required>
+	            						<input type="text" name="country" class="form-control" required>
 
-	            						<label>Street address *</label>
-	            						<input type="text" class="form-control" placeholder="House number and Street name" required>
-	            						<input type="text" class="form-control" placeholder="Appartments, suite, unit etc ..." required>
-
-	            						<div class="row">
-		                					<div class="col-sm-6">
+	            						
+	            						
 		                						<label>Town / City *</label>
-		                						<input type="text" class="form-control" required>
-		                					</div><!-- End .col-sm-6 -->
+		                						<input type="text" name="city" class="form-control" required>
+		                			
 
-		                					<div class="col-sm-6">
-		                						<label>State / County *</label>
-		                						<input type="text" class="form-control" required>
-		                					</div><!-- End .col-sm-6 -->
-		                				</div><!-- End .row -->
+		                					
+		                						<label>State *</label>
+		                						<input type="text" name="state" class="form-control" required>
+		                					
 
-		                				<div class="row">
-		                					<div class="col-sm-6">
+		                			
+		                					
 		                						<label>Postcode / ZIP *</label>
-		                						<input type="text" class="form-control" required>
-		                					</div><!-- End .col-sm-6 -->
-
-		                					<div class="col-sm-6">
+		                						<input type="number" name="pincode" class="form-control" required>
+		                					
+		                					
 		                						<label>Phone *</label>
 		                						<input type="tel" class="form-control" required>
-		                					</div><!-- End .col-sm-6 -->
-		                				</div><!-- End .row -->
+		                					
 
-	                					<label>Email address *</label>
-	        							<input type="email" class="form-control" required>
-
-	        							<div class="custom-control custom-checkbox">
+	                				
+	        							{{!-- <div class="custom-control custom-checkbox">
 											<input type="checkbox" class="custom-control-input" id="checkout-create-acc">
 											<label class="custom-control-label" for="checkout-create-acc">Create an account?</label>
-										</div><!-- End .custom-checkbox -->
+										</div><!-- End .custom-checkbox --> --}}
 
-										<div class="custom-control custom-checkbox">
+										{{!-- <div class="custom-control custom-checkbox">
 											<input type="checkbox" class="custom-control-input" id="checkout-diff-address">
 											<label class="custom-control-label" for="checkout-diff-address">Ship to a different address?</label>
-										</div><!-- End .custom-checkbox -->
+										</div><!-- End .custom-checkbox --> --}}
 
-	                					<label>Order notes (optional)</label>
-	        							<textarea class="form-control" cols="30" rows="4" placeholder="Notes about your order, e.g. special notes for delivery"></textarea>
+	                					{{!-- <label>Order notes (optional)</label>
+	        							<textarea class="form-control" cols="30" rows="4" placeholder="Notes about your order, e.g. special notes for delivery"></textarea> --}}
 		                		</div><!-- End .col-lg-9 -->
 		                		<aside class="col-lg-3">
 		                			<div class="summary">
 		                				<h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
 
 		                				<table class="table table-summary">
+
 		                					<thead>
+											
 		                						<tr>
-		                							<th>Product</th>
+		                							<th>product</th>
+													<th>Quantity</th>
+													
 		                							<th>Total</th>
 		                						</tr>
 		                					</thead>
 
 		                					<tbody>
+													{{#each cartDetails}}
 		                						<tr>
-		                							<td><a href="#">Beige knitted elastic runner shoes</a></td>
-		                							<td>$84.00</td>
+		                							<td><a href="/productdetails/{{this.id}}">{{this.productName}}</a></td>
+													<td>{{this.quantity}} Piece X {{this.price}} X {{this.daysOfRent}}</td>
+												
+		                							<td>{{this.total}}</td>
 		                						</tr>
+												{{/each}}
 
-		                						<tr>
-		                							<td><a href="#">Blue utility pinafore denimdress</a></td>
-		                							<td>$76,00</td>
-		                						</tr>
+		                						
 		                						<tr class="summary-subtotal">
 		                							<td>Subtotal:</td>
-		                							<td>$160.00</td>
+		                							<td>{{totalPrice}}</td>
 		                						</tr><!-- End .summary-subtotal -->
 		                						<tr>
+													
 		                							<td>Shipping:</td>
 		                							<td>Free shipping</td>
 		                						</tr>
 		                						<tr class="summary-total">
 		                							<td>Total:</td>
-		                							<td>$160.00</td>
+		                							<td>{{grandTotal}}</td>
 		                						</tr><!-- End .summary-total -->
 		                					</tbody>
 		                				</table><!-- End .table table-summary -->

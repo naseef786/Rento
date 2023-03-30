@@ -1,6 +1,6 @@
 <div class="page-wrapper">
-    {{#with product}}
-								    	<form action="/admin/updateproduct/{{this.id}}" method="post" enctype="multipart/form-data" >
+                  b    {{#with product}}
+								    	<form action="/admin/updateproduct/{{this.id}}" method="put" id="form"   enctype="multipart/form-data" >
 			                				<div class="row">
 			                					<div class="col-sm-6">
 			                						<label>Product Name *</label>
@@ -44,8 +44,40 @@
 			            						<i class="icon-long-arrow-right"></i>
 			                				</button>
 			                			</form>
-                                         {{#if this.image}}
-  <image class="image" src="/../{{this.image}}"></image>
-  {{/if}}
                                         {{/with}}
 								    </div><!-- .End .tab-pane -->
+
+
+	<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+    <script>
+     let form= document.getElementById('form')
+     form.addEventListener("submit",(e)=>{
+      e.preventDefault()
+      let url = "/admin/updateproduct/{{this.id}}"
+      let formData = new FormData(form)
+      let position=[]
+      for(i=0;i<4;i++){
+        if(document.getElementById(i).value)
+        position.push(i)
+      }
+      formData.append("position", JSON.stringify(position))
+      axios.put(url, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+     }).then(response=>{
+      if(response.data.msg_login){
+        location.href="/admin"
+    }
+    else{
+if(response){
+      location.href= "/admin/product"
+      }
+    }
+      
+     })
+     })
+     
+     
+    </script>

@@ -31,6 +31,7 @@
 						</thead>
 
 						<tbody>
+							{{#if products}}
 							{{#each products}}
 							<tr>
 								<td class="product-col">
@@ -50,13 +51,25 @@
 								<td class="stock-col"><span class="in-stock">In stock</span></td>
 								
 								<td class="action-col">
-									<form action="/addtocart/{{this.id}}" method="post">
+									<form action="/productdetails/{{this.id}}" method="get">
 									<button class="btn btn-block btn-outline-primary-2"><i class="icon-cart-plus"></i>Add to Cart</button>
 				                   </form>				
 								</td>
-								<td class="remove-col"><form action="/deletewish/{{this.id}}" method="post"><button type="submit" class="btn-remove"><i class="icon-close"></i></button></form></td>
+
+
+						              <td class="remove-col">
+						              <form action="/deletewish/{{this.id}}" method="POST">
+                                     
+                                      <button type="submit" class="btn-remove"><i class="icon-close"></i></button>
+                                      </form>
+                                      </td>
 							</tr>
+
+								
 							{{/each}}
+							{{else}}
+							<h2> products unAvailable</h2>
+							{{/if}}
 							
 						</tbody>
 					</table><!-- End .table table-wishlist -->
@@ -79,5 +92,13 @@
     </div><!-- End .page-wrapper -->
     <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
 
-
+<script>
+  function removeFromWishlist(Id) {
+    fetch(`/removewish/${Id}`, {
+      method: 'PATCH'
+    }).then(() => {
+      window.location.reload(); // Reload the page after the item is removed from the wishlist
+    });
+  }
+</script>
     

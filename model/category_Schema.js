@@ -8,6 +8,18 @@ const categorySchema = new  mongoose.Schema({
         type:String,
         required:true
     },
+    description:{
+        type:String,
+        required:true
+    },
+    products:
+        [{
+            product_id: {
+                type: mongoose.Schema.Types.ObjectId,
+                  ref: 'products',
+              }
+}]
+    
     
 });
 categorySchema.virtual('id').get(function () {

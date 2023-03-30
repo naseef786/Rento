@@ -4,7 +4,7 @@
 <!-- molla/index-22.html  22 Nov 2019 10:01:54 GMT -->
 <head>
 	<title></title>
-	<title>Molla - Bootstrap eCommerce Template</title>
+	<title>Welcome to Rento</title>
 	<meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -28,13 +28,15 @@
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="/assets/css/plugins/owl-carousel/owl.carousel.css">
     <link rel="stylesheet" href="/assets/css/plugins/magnific-popup/magnific-popup.css">
+        <link rel="stylesheet" href="/assets/css/plugins/jquery.countdown.css">
     <!-- Main CSS File -->
     <link rel="stylesheet" href="/assets/css/style.css">
-    <link rel="stylesheet" href="/assets/css/skins/skin-demo-22.css">
-    <link rel="stylesheet" href="/assets/css/demos/demo-22.css">
+    
        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"
       integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" 
       crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
 </head>
 <body>
 	 <div class="page-wrapper">
@@ -53,37 +55,31 @@
                         <button class="mobile-menu-toggler">
                             <span class="sr-only">Toggle mobile menu</span>
                             <i class="icon-bars"></i>
+
                         </button>
-                        
-                        <a href="/" class="logo">
-                            <img src="/assets/images/icons/102-4-5-logo-rento.webp" alt="rento logo" width="105" height="25">
-                        </a>
-                    </div><!-- End .header-left -->
-
-                   
-
-                  
+                    </div>
                 </div><!-- End .container -->
             </div><!-- End .header-middle -->
 
             <div class="wrap-container ">
                 <div class="header-bottom">
                     <div class="container">
+                                   <div class="header-left">
+                           <a href="/admin" class="logo">
+                            <img src="/assets/images/icons/102-4-5-logo-rento.webp" alt="rento logo" width="105" height="25">
+                           </a>
+                                   </div>
                         
-                        <div class="header-center" style="    display: flex;
+                        
+                        
+                        <div class="header-right" style="    display: flex;
                                                               flex-direction: row-reverse;
                                                               flex-wrap: wrap;
                                                               justify-content: space-between;
                                                               align-content: center;  ">
                         <nav class="main-nav">
                             <ul class="menu">
-                                <li>
-                                <a href="/admin/featured" class="" style="padding-right: 1rem;
-                                                                            font-size: 1.4rem;font-weight: 700;
-                                                                             font-family: 'Roboto';
-                                                                           letter-spacing: -.01rem;
-                                                                           text-transform: uppercase;">Featured</a>
-                                 </li>
+                                
                                  <li>
                                 <a href="/about" class="" style="padding-right: 3rem;
                                                                             font-size: 1.4rem;font-weight: 700;
@@ -91,11 +87,12 @@
                                                                            letter-spacing: -.01rem;
                                                                            text-transform: uppercase;">About</a>
                                  </li>
-                                  <a href="/contact" class="" style="     -right: 3rem;
-                                                                            font-size: 1.4rem;font-weight: 700;
-                                                                             font-family: 'Roboto';
-                                                                           letter-spacing: -.01rem;
-                                                                           text-transform: uppercase;">Contact</a>
+                                 <li>
+                                  <a href="/contact" class="" style="-right: 3rem;
+                                                                     font-size: 1.4rem;font-weight: 700;
+                                                                     font-family: 'Roboto';
+                                                                     letter-spacing: -.01rem;
+                                                                     text-transform: uppercase;">Contact</a>
                                  </li>
                             </ul><!-- End .menu -->
                         </nav><!-- End .main-nav -->
@@ -112,7 +109,7 @@
 
       {{{body}}}
 
-<footer class="footer footer-dark">
+<footer class="footer">
           
 
  <div class="footer-bottom">

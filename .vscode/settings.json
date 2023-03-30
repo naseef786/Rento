@@ -1,3 +1,6 @@
 {
-    "liveServer.settings.port": 5501
+    "liveServer.settings.port": 5501,
+    "genieai.promptPrefix.addTests-enabled": true,
+    "genieai.promptPrefix.customPrompt1-enabled": true,
+    "genieai.response.showNotification": true
 }

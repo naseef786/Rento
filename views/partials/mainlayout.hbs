@@ -33,7 +33,7 @@
     <link rel="stylesheet" href="/assets/css/demos/demo-22.css">
 </head>
 <body>
-	 <div class="page-wrapper">
+	
     
 	
        
@@ -70,13 +70,17 @@
                     
                               <a href="/wishlist" class="wishlist-link">
                             <i class="icon-heart-o"></i>
-                            <span class="wishlist-count">3</span>
+                            {{#with user}}
+                            <span class="wishlist-count">{{this.wishList.length}}</span>
+                            {{/with}}
                                 </a>
 
                       <div class="dropdown cart-dropdown">
                             <a href="/Cart" class="dropdown-toggle" >
                                 <i class="icon-shopping-cart"></i>
-                              <span class="cart-count">{{#if session.cartCount}}{{session.cartCount}}{{else}}0{{/if}}</span>
+                                 {{#with user}}
+                              <span class="cart-count">{{#if session.cartCount}}{{session.cartCount}}{{else}}{{this.cart.length}}{{/if}}</span>
+                                  {{/with}}
                               </a>
                         </div>
                     </div><!-- End .header-right -->
@@ -107,6 +111,7 @@
                         </div>
                         <div class="header-center">
                         <nav class="main-nav">
+                        
                             <ul class="menu sf-arrows">
 
                                 <li>
@@ -180,16 +185,20 @@
                         <div class="header-right ">
                             <div class="text-dark">
                                 <ul class="top-menu top-link-menu">
+                                   
                                     <li>
                                         <ul><form action="/logout" method="post">
                                             <li><button type="submit" data-toggle="modal"class="icon-user" >LogOut</button></li></form>
                                             <li>
-                                        <button class="text-dark"><a href="/profile">Account</a></button>
+                                        <button class="text-dark"><a href="/profile">{{#with user}}
+                                        {{this.name}}
+                                        {{/with}}</a></button>
                                     </li>
                                         </ul>
                                     </li>
                                      
                                 </ul>
+                                 
                                  
                             </div><!-- End .header-text -->
                         </div><!-- End .header-right -->
@@ -197,7 +206,7 @@
                 </div><!-- End .header-bottom -->
             </div><!-- End .wrap-container -->
         </header><!-- End .header -->
-
+                                      
 
 
 

@@ -12,13 +12,29 @@ var userRouter = require('./routes/user');
 const hbs = require("hbs");
 const { urlencoded } = require('body-parser');
 var app = express();
+const handlebars = require('handlebars');
+const { Users } = require('./model/user_Schema');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 hbs.registerPartials(__dirname + '/views/partials');
 
+hbs.registerHelper('limit', function(arr, limit) {
+  if (!Array.isArray(arr)) { return []; }
+  return arr.slice(0, limit);
+});
 
+const helpers = require('handlebars-helpers')();
+
+
+handlebars.registerHelper('equal', function(a, b, options) {
+  if (a === b) {
+    return options.fn(this);
+  } else {
+    return options.inverse(this);
+  }
+});
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -28,6 +44,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static('public/images/uploads'))
 
 app.use(bodyParser.urlencoded({extended:true}))
+
 
 
 
