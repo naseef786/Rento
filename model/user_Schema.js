@@ -75,7 +75,11 @@ const userSchema = new mongoose.Schema
             type: String,
             required: true
           },
-          address: {
+          country:{
+            type:String,
+            requires:true
+          },
+          Address: {
             type: String,
             required: true
           },

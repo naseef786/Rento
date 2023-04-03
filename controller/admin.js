@@ -7,7 +7,6 @@ const { Users } = require("../model/user_Schema")
 const { Category } = require('../model/category_Schema')
 const { Coupon } = require('../model/coupon_Schema');
 const { Order } = require('../model/order_Schema')
-const { OrderItem } = require('../model/orderItemSchema')
 const fs = require('fs');
 const { remove } = require("lodash");
 
@@ -86,6 +85,24 @@ const adminViewProduct = async (req, res) => {
     res.render('adminViewProduct', { items, layout: '/partials/layout' })
   })
 
+}
+
+const UpdateProfile = async (req, res) => {
+  try {
+      const id = req.session.admin_id
+      const email = req.body.email
+      const password = req.body.password
+
+      const updateUser = await Admin.findByIdAndUpdate({_id : id }, { $set: { email: email,password:password } })
+
+      if (updateUser) {
+
+          res.redirect("/admin")
+      }
+
+  } catch (error) {
+      console.log(error.message);
+  }
 }
 
 
@@ -473,6 +490,7 @@ module.exports = {
   adminViewProduct,
   adminlog,
   adminSignup,
+  UpdateProfile,
   adminHome,
   adminAddProduct,
   adminViewUsers,
@@ -491,5 +509,7 @@ module.exports = {
   adminViewWish,
   adminManageUsers,
   manageOrder,
-  deleteCoupon
+  deleteCoupon,
+  
+
 }

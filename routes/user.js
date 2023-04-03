@@ -30,6 +30,8 @@ const {
       getOrderCount,
       getOrders,
       deleteOrder,
+      UpdateProfile,
+      checkoutaddAddress,
      
 } = require("../controller/user");
 
@@ -50,9 +52,10 @@ router.get('/search',getsearch)
 
 //views
 router.get('/productdetails/:id',productDetails)
-router.get('/products',viewProducts)
+router.get('/viewallproducts',viewProducts)
 router.get('/getcategory/:id',getCategory)
 router.get('/profile',profilePage);
+router.post('/updataprofile',UpdateProfile)
 
 //wishlist
 router.post('/postwishlist/:id',ifUser,wishlistCount)
@@ -68,10 +71,11 @@ router.post('/deletecart/:id',cartDelete)
 
 
 //checkout
+router.get('/checkout',userCart,checkoutPage)
 router.post('/checkout',checkoutPage)
-router.get('/proceedOrder',placeorder)
-router.get('/placeOrder',proceedOrder)
-
+router.get('/proceedOrder',userCart,ifUser,placeorder)
+// router.get('/placeOrder',proceedOrder)
+router.post('/placeOrder',placeorder)
 //logout
 router.post('/logout',userLogout)
 

@@ -168,18 +168,16 @@
 	                		<div class="col-md-8 col-lg-9">
 	                			<div class="tab-content">
 								        <div class="tab-pane fade show active" id="tab-updateProfile" role="tabpanel" aria-labelledby="tab-updateProfile-link">
-								    	<form action="#">
+								    	<form action="/admin/updateprofile" method="get">
 		                					<label>Email address *</label>
-		        							<input type="email" class="form-control" required>
+		        							<input type="email" name="email" class="form-control" required>
 
 		            						<label>Current password (leave blank to leave unchanged)</label>
-		            						<input type="password" class="form-control">
+		            						<input type="password" name="password" class="form-control">
 
-		            						<label>New password (leave blank to leave unchanged)</label>
-		            						<input type="password" class="form-control">
+		            					
 
-		            						<label>Confirm new password</label>
-		            						<input type="password" class="form-control mb-2">
+		            						
 
 		                					<button type="submit" class="btn btn-outline-primary-2">
 			                					<span>SAVE CHANGES</span>
@@ -373,18 +371,16 @@
                                         </form>
 			                            </div><!-- .End .tab-pane -->
                                         <div class="tab-pane fade" id="tab-updateProfile" role="tabpanel" aria-labelledby="tab-updateProfile-link">
-								    	<form action="/admin/update/">
+								    	<form action="/admin/updateprofile" method="post">
 		                					<label>Email address *</label>
-		        							<input type="email" class="form-control" required>
+		        							<input type="email" name="email" class="form-control" required>
 
 		            						<label>Current password (leave blank to leave unchanged)</label>
-		            						<input type="password" class="form-control">
+		            						<input type="password" name="password" class="form-control">
 
-		            						<label>New password (leave blank to leave unchanged)</label>
-		            						<input type="password" class="form-control">
+		            	
 
-		            						<label>Confirm new password</label>
-		            						<input type="password" class="form-control mb-2">
+		            						
 
 		                					<button type="submit" class="btn btn-outline-primary-2">
 			                					<span>SAVE CHANGES</span>

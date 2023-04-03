@@ -93,7 +93,7 @@
 								    </div><!-- .End .tab-pane -->
                                      {{#with data}}
 								    <div class="tab-pane fade" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
-								    	<form action="/updateprofile/{{this.id}}">
+								    	<form action="/updateprofile/{{this.id}}" method="post">
 			                				{{!-- <div class="row">
 			                					<div class="col-sm-6">
 			                						<label >name</label>
@@ -113,11 +113,14 @@
 		                					<label>Email address </label>
 		        							<input type="email" value="{{this.email}}" class="form-control" required>
 
-		            						<label>Current password (leave blank to leave unchanged)</label>
+											<label>Mobile No: </label>
+		        							<input type="tel" value="{{this.mobile}}" name="phone" class="form-control" required>
+
+		            						{{!-- <label>Current password (leave blank to leave unchanged)</label>
 		            						<input type="password" value="this.password" class="form-control">
 
 		            						<label>New password (leave blank to leave unchanged)</label>
-		            						<input type="password" class="form-control">
+		            						<input type="password" class="form-control"> --}}
 
 		            						<label>Confirm new password</label>
 		            						<input type="password" class="form-control mb-2">

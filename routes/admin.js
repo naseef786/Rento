@@ -26,6 +26,7 @@ const {
   adminViewWish,
   manageOrder,
   deleteCoupon,
+  UpdateProfile
 
   
   
@@ -41,6 +42,7 @@ router.get('/',ifAdmin,adminHome)
 router.get('/adminlogin',ifAdminLogout,adminlog)
 router.post('/adminlogin',adminLogin)
 router.post('/adminsignup',adminSignup)
+router.get('/updateprofile',ifAdmin,UpdateProfile)
 
 
 
