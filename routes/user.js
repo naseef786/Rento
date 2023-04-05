@@ -32,6 +32,7 @@ const {
       deleteOrder,
       UpdateProfile,
       checkoutaddAddress,
+      orderSuccess,
      
 } = require("../controller/user");
 
@@ -58,7 +59,7 @@ router.get('/profile',profilePage);
 router.post('/updataprofile',UpdateProfile)
 
 //wishlist
-router.post('/postwishlist/:id',ifUser,wishlistCount)
+router.post('/wishlist/add',ifUser,wishlistCount)
 router.get('/Wishlist',ifUser,wish);
 router.post('/deletewish/:id',ifUser,deleteWishlist)
 // router.patch('/removewish',ifUserAxios,removeWish)
@@ -78,6 +79,6 @@ router.get('/proceedOrder',userCart,ifUser,placeorder)
 router.post('/placeOrder',placeorder)
 //logout
 router.post('/logout',userLogout)
-
+router.post('/success',orderSuccess)
 
 module.exports = router;

@@ -8,7 +8,8 @@ const { Coupon } = require("../model/coupon_Schema")
 const { Order } = require('../model/order_Schema')
 const mongoose = require("mongoose")
 const { sum } = require("lodash")
-
+const Razorpay = require('razorpay')
+const { v4: uuidv4 } = require('uuid');
 
 
 
@@ -16,8 +17,6 @@ const userLogin = (req, res) => {
 
     res.render("userLogin", { layout: "partials/loginlayout" })
 }
-
-
 
 const userSignup = async (req, res, next) => {
     try {
@@ -37,9 +36,6 @@ const userSignup = async (req, res, next) => {
         next(err);
     }
 }
-
-
-
 
 const postSignin = async (req, res) => {
     try {
@@ -125,7 +121,6 @@ const getCategory = async (req, res) => {
     }
 }
 
-
 const contactPage = (req, res) => {
     res.render("contact", { layout: "partials/mainlayout" })
 }
@@ -166,8 +161,6 @@ const UpdateProfile = async (req, res) => {
     }
 }
 
-
-
 let getsearch = async (req, res) => {
     const query = req.query.name;
     console.log(query);
@@ -199,8 +192,6 @@ let getsearch = async (req, res) => {
 
 }
 
-
-
 const cartPage = async (req, res) => {
     // retrieve the caart array from the userSchema for the current user
     const currentUser = await Users.findById(req.session.user_id).populate('cart');
@@ -224,7 +215,6 @@ const cartPage = async (req, res) => {
     // pass the array of product details to the wishlist.hbs page
     res.render("userCart", { layout: "partials/mainlayout", Cart, coupdata, cartProducts })
 };
-
 
 const addToCart = async (req, res) => {
     const productId = req.params.id;
@@ -337,10 +327,6 @@ const cartDelete = (req, res, next) => {
     }
 }
 
-
-
-
-
 const faqPage = (req, res) => {
     res.render("faq", { layout: "partials/mainlayout" })
 }
@@ -350,30 +336,48 @@ const viewProducts =  async(req, res) => {
             })
    
 }
-const wishlistCount = async (req, res) => {
-    const user_id = req.session.user_id;
-    console.log(user_id);
-    try {
-        const user = await Users.findById(user_id)
-        const product = await Products.findById(req.params.id);
+// const wishlistCount = async (req, res) => {
+//     const user_id = req.session.user_id;
+//     console.log(user_id);
+//     try {
+//         const user = await Users.findById(user_id)
+//         const product = await Products.findById(req.params.id);
 
-        if (!product.wishList.includes({ user_id: user_id })) {
-            let object = { productId: product.id }
-            product.wishList.push(user_id);
-            product.likeCount++;
-            user.wishList.push(object)
-            await product.save();
-            await user.save();
-            res.redirect('/');
-        }
-        else {
-            return res.status(400).json({ msg: 'you have already liked this product' });
-        }
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Server Error');
+//         if (!product.wishList.includes({ user_id: user_id })) {
+//             let object = { productId: product.id }
+//             product.wishList.push(user_id);
+//             product.likeCount++;
+//             user.wishList.push(object)
+//             await product.save();
+//             await user.save();
+//             res.redirect('/');
+//         }
+//         else {
+//             return res.status(400).json({ msg: 'you have already liked this product' });
+//         }
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).send('Server Error');
+//     }
+// };
+
+
+
+const wishlistCount = async (req, res) => {
+    const productId = req.body.productId;
+    let user_id =req.session.user_id;
+    const user = await Users.findOne({ _id:user_id });
+    if (user) {
+      if (!user.wishList.includes(productId)) {
+        user.wishList.push(productId);
+        await user.save();
+        res.status(200).json({ success: true });
+      } else {
+        res.status(400).json({ success: false, message: 'Product already in wishlist' });
+      }
+    } else {
+      res.status(404).json({ success: false, message: 'User not found'})}
     }
-};
 
 const deleteWishlist = async (req, res, next) => {
     try {
@@ -390,7 +394,6 @@ const deleteWishlist = async (req, res, next) => {
         next(error)
     }
 }
-
 const removeWish = async (req, res) => {
     const userId = req.session.user_id; // Assuming that the user is authenticated and their ID is stored in the req.user object
     const itemId = req.body.Id;
@@ -518,18 +521,20 @@ const placeorder = async (req, res) => {
         Address: req.body.address,
 
     }
-    await Users.findOneAndUpdate({ userId: user_id }, { $set: { 'address': AddressObj } })
-
-
+    try{
+     let userad = await Users.findById(user_id)
+     userad.address.push(AddressObj)
+     userad.save().then(data=>console.log(data))
     let coupon = req.body.couponcode;
-   
+    const randomstring = uuidv4().slice(0, 5);
+    console.log(randomstring, "random string");
 
      let coup = await Coupon.findOneAndUpdate({ coupenCode: coupon })
            coup.users.push(user_id)
            coup.quantity--
            coup.save();
     const user = await Users.findOne({ _id: user_id })
-    let Cart = user.cart
+    let Cart = await user.cart
     let items = []
     items.push(Cart)
     const totalPrice = user.cart.reduce((total, item) => {
@@ -545,6 +550,7 @@ const placeorder = async (req, res) => {
         deliveryAddress: delivery,
         couponCode: coup.couponCode,
         payment: req.body.payment,
+        orderId:randomstring
     })
     order = await order.save().then(async (data) => {
         const orderId = data._id.toString()
@@ -552,29 +558,38 @@ const placeorder = async (req, res) => {
         if (data.payment == 'COD') {
             await Users.updateOne({ _id: user_id }, {$set: { cart: []}})
             console.log(data);
-            res.json({ status: true })
+            // res.json({ status: true })
         }
         else {
             var instance = new Razorpay({
-                key_id: process.env.KEY_ID,
-                key_secret: process.env.KEY_SECRET,
+                key_id: "rzp_test_xKJur4lyLcX0ZO",
+                key_secret: 'A5cyQ9fodN27Gwpgx5UlbmX0',
             })
-            let amount = total
-            instance.orders.create({
+            let amount = totalPrice
+           const response = await instance.orders.create({
                 amount: amount * 100,
                 currency: "INR",
                 receipt: orderId,
-            }, (err, order) => {
-                console.log(order);
-                res.json({ status: false, order })
+                payment_capture: 1
             })
+            console.log(response);
+            res.render('checkoutform', {
+                key: "rzp_test_xKJur4lyLcX0ZO",
+                orderId: response.id,
+                amount: response.amount,
+                name: user.name,
+                email: user.email,
+                contactNumber: user.mobile,
+                layout: "partials/mainlayout"
+              });
         }
     })
+}catch (error){
+    console.log(error);
+    res.status(500).send(error);
+}
 
-    if (!order)
-        return res.status(400).send('the order cannot be created!')
-
-    res.send(order);
+   
 }
 
 
@@ -607,39 +622,6 @@ const checkoutPage = async (req, res) => {
     })
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 const deleteOrder = (req, res) => {
@@ -718,7 +700,36 @@ const checkoutaddAddress = async (req, res) => {
 
 
 
-
+let orderSuccess = async (req, res) => {
+    const amount = req.body.amount;
+        const order_id = req.body.orderId;
+        const payment_id = req.body.razorpay_payment_id;
+        const signature = req.body.razorpay_signature;
+        // console.log(req.body);
+        var instance = new Razorpay({
+            key_id: "rzp_test_xKJur4lyLcX0ZO",
+            key_secret: 'A5cyQ9fodN27Gwpgx5UlbmX0',
+        })
+        try {
+           req.params.handler
+          const result = await instance.payments.capture(payment_id, amount);
+          console.log(result);
+      
+          // render success page with order details
+          res.render('success', {
+            title: 'Payment Success',
+            orderId: order_id,
+            paymentId: payment_id,
+            signature: signature
+          });
+        } catch (error) {
+          console.log(error);
+          res.render('failure', {
+            title: 'Payment Failure',
+            message: error.message
+          });
+        }
+      };
 
 
 
@@ -755,7 +766,8 @@ module.exports = {
     getOrders,
     deleteOrder,
     proceedOrder,
-    checkoutaddAddress
+    checkoutaddAddress,
+    orderSuccess
 
 
 

@@ -29,12 +29,6 @@
             				    {{/with}} 
 							
 								
-{{!-- 								
-									<label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to enter your code</span></label>
-									<input type="text" class="form-control" required id="checkout-discount-input">
-                             --}}
-								
-								
 							</form>
             			</div><!-- End .checkout-discount -->
 									
@@ -150,7 +144,7 @@
 						         <h5>coupon {{this.couponCode}}</h5>
 								 <input type="" name="coupon"  value="{{this.couponCode}}" class="form-control" required>
             				      {{/with}}  
-		                				<div class="accordion-summary" id="accordion-payment">
+		                				{{!-- <div class="accordion-summary" id="accordion-payment">
 										    <div class="card">
 										        <div class="card-header" id="heading-1">
 										            <h2 class="card-title">
@@ -162,11 +156,12 @@
 										        <div id="collapse-1" class="collapse show" aria-labelledby="heading-1" data-parent="#accordion-payment">
 										            <div class="card-body">
 										                Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.
-														{{!-- <input type="hidden" value="onlinePay" name="payment"> --}}
+														<input type="hidden" value="onlinePay" name="payment">
+														<input class="form-check-input" type="radio" name="paymentMethod"  >
+                                                          <label class="form-check-label" for="payment">payment</label>
 										            </div><!-- End .card-body -->
 										        </div><!-- End .collapse -->
 										    </div><!-- End .card -->
-
 										    <div class="card">
 										        <div class="card-header" id="heading-2">
 										            <h2 class="card-title">
@@ -182,53 +177,13 @@
 										            </div><!-- End .card-body -->
 										        </div><!-- End .collapse -->
 										    </div><!-- End .card -->
+										</div><!-- End .accordion --> --}}
+						     				<select name="payment">
+                                            <option value="onlinePay">Online Payment</option>
+                                            <option value="COD">Cash on Delivery</option>
+                                            </select>
 
-										    {{!-- <div class="card">
-										        <div class="card-header" id="heading-3">
-										            <h2 class="card-title">
-										                <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
-										                    Cash on delivery
-										                </a>
-										            </h2>
-										        </div><!-- End .card-header -->
-										        <div id="collapse-3" class="collapse" aria-labelledby="heading-3" data-parent="#accordion-payment">
-										            <div class="card-body">Quisque volutpat mattis eros. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. 
-										            </div><!-- End .card-body -->
-										        </div><!-- End .collapse -->
-										    </div><!-- End .card -->
-
-										    <div class="card">
-										        <div class="card-header" id="heading-4">
-										            <h2 class="card-title">
-										                <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-4" aria-expanded="false" aria-controls="collapse-4">
-										                    PayPal <small class="float-right paypal-link">What is PayPal?</small>
-										                </a>
-										            </h2>
-										        </div><!-- End .card-header -->
-										        <div id="collapse-4" class="collapse" aria-labelledby="heading-4" data-parent="#accordion-payment">
-										            <div class="card-body">
-										                Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede. Donec nec justo eget felis facilisis fermentum.
-										            </div><!-- End .card-body -->
-										        </div><!-- End .collapse -->
-										    </div><!-- End .card -->
-
-										    <div class="card">
-										        <div class="card-header" id="heading-5">
-										            <h2 class="card-title">
-										                <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-5" aria-expanded="false" aria-controls="collapse-5">
-										                    Credit Card (Stripe)
-										                    <img src="assets/images/payments-summary.png" alt="payments cards">
-										                </a>
-										            </h2>
-										        </div><!-- End .card-header -->
-										        <div id="collapse-5" class="collapse" aria-labelledby="heading-5" data-parent="#accordion-payment">
-										            <div class="card-body"> Donec nec justo eget felis facilisis fermentum.Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Lorem ipsum dolor sit ame.
-										            </div><!-- End .card-body -->
-										        </div><!-- End .collapse -->
-										    </div><!-- End .card --> --}}
-										</div><!-- End .accordion -->
-
-		                				<button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
+		                				<button  id="rzp-button1" class="btn btn-outline-primary-2 btn-order btn-block">
 		                					<span class="btn-text">Place Order</span>
 		                					<span class="btn-hover-text">Proceed to Checkout</span>
 		                				</button>
@@ -237,7 +192,7 @@
 		                	</div><!-- End .row -->
             			</form>
 						{{else}}
-<form action="/placeOrder" method="post" >
+                         <form action="/placeOrder" method="post" >
 		                	<div class="row">
 								
 								
@@ -281,10 +236,7 @@
 		                						<label>Phone *</label>
 		                						<input type="tel" name="phone"  value="{{this.phone}}" class="form-control" required>
 		                      
-								{{#with couponData }}
-						         <h5>coupon {{this.couponCode}}applied successfully</h5>
-								 <input type="text" name="coupon"  value="{{this.couponData}}" class="form-control" required>
-            				    {{/with}}              					
+								             					
 
 	                				
 	        							{{!-- <div class="custom-control custom-checkbox">
@@ -334,6 +286,15 @@
 		                							<td>Subtotal:</td>
 		                							<td>{{totalPrice}}</td>
 		                						</tr><!-- End .summary-subtotal -->
+												<tr><td>
+
+	                               {{#with couponData }}
+						          <label for="">coupon applied </label></td>
+								<td> <input type="text" name="coupon"  value="{{this.couponCode}}" class="form-control" required></td>
+            				    {{/with}} 
+
+												</tr>
+											
 		                						<tr>
 													
 		                							<td>Shipping:</td>
@@ -346,8 +307,8 @@
 		                					</tbody>
 		                				</table><!-- End .table table-summary -->
 
-		                				<div class="accordion-summary" id="accordion-payment">
-										    <div class="card">
+		                				{{!-- <div class="accordion-summary" id="accordion-payment">
+										   <div class="card">
 										        <div class="card-header" id="heading-1">
 										            <h2 class="card-title">
 										                <a role="button" data-toggle="collapse" href="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
@@ -358,10 +319,12 @@
 										        <div id="collapse-1" class="collapse show" aria-labelledby="heading-1" data-parent="#accordion-payment">
 										            <div class="card-body">
 										                Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.
+														<input type="hidden" value="onlinePay" name="payment">
+														<input class="form-check-input" type="radio" name="paymentMethod"  >
+                                                          <label class="form-check-label" for="payment">payment</label>
 										            </div><!-- End .card-body -->
 										        </div><!-- End .collapse -->
 										    </div><!-- End .card -->
-
 										    <div class="card">
 										        <div class="card-header" id="heading-2">
 										            <h2 class="card-title">
@@ -369,6 +332,7 @@
 										                    Check payments
 										                </a>
 										            </h2>
+													<input type="hidden" value="COD" name="payment" > 
 										        </div><!-- End .card-header -->
 										        <div id="collapse-2" class="collapse" aria-labelledby="heading-2" data-parent="#accordion-payment">
 										            <div class="card-body">
@@ -377,54 +341,16 @@
 										        </div><!-- End .collapse -->
 										    </div><!-- End .card -->
 
-										    <div class="card">
-										        <div class="card-header" id="heading-3">
-										            <h2 class="card-title">
-										                <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
-										                    Cash on delivery
-										                </a>
-										            </h2>
-										        </div><!-- End .card-header -->
-										        <div id="collapse-3" class="collapse" aria-labelledby="heading-3" data-parent="#accordion-payment">
-										            <div class="card-body">Quisque volutpat mattis eros. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. 
-										            </div><!-- End .card-body -->
-										        </div><!-- End .collapse -->
-										    </div><!-- End .card -->
 
-										    <div class="card">
-										        <div class="card-header" id="heading-4">
-										            <h2 class="card-title">
-										                <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-4" aria-expanded="false" aria-controls="collapse-4">
-										                    PayPal <small class="float-right paypal-link">What is PayPal?</small>
-										                </a>
-										            </h2>
-										        </div><!-- End .card-header -->
-										        <div id="collapse-4" class="collapse" aria-labelledby="heading-4" data-parent="#accordion-payment">
-										            <div class="card-body">
-										                Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede. Donec nec justo eget felis facilisis fermentum.
-										            </div><!-- End .card-body -->
-										        </div><!-- End .collapse -->
-										    </div><!-- End .card -->
+										</div><!-- End .accordion --> --}}
+										<select name="payment">
+                                        <option value="onlinePay">Online Payment</option>
+                                        <option value="COD">Cash on Delivery</option>
+                                         </select>
 
-										    <div class="card">
-										        <div class="card-header" id="heading-5">
-										            <h2 class="card-title">
-										                <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-5" aria-expanded="false" aria-controls="collapse-5">
-										                    Credit Card (Stripe)
-										                    <img src="assets/images/payments-summary.png" alt="payments cards">
-										                </a>
-										            </h2>
-										        </div><!-- End .card-header -->
-										        <div id="collapse-5" class="collapse" aria-labelledby="heading-5" data-parent="#accordion-payment">
-										            <div class="card-body"> Donec nec justo eget felis facilisis fermentum.Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Lorem ipsum dolor sit ame.
-										            </div><!-- End .card-body -->
-										        </div><!-- End .collapse -->
-										    </div><!-- End .card -->
-										</div><!-- End .accordion -->
-
-		                				<button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
-		                					<span class="btn-text">Place Order</span>
-		                					<span class="btn-hover-text">Proceed to Checkout</span>
+		                				<button  id="rzp-button1" class="btn btn-outline-primary-2 btn-order btn-block">
+		                					<span id="rzp-button1" class="btn-text">Place Order</span>
+		                					<span  id="rzp-button1" class="btn-hover-text">Proceed to Checkout</span>
 		                				</button>
 		                			</div><!-- End .summary -->
 		                		</aside><!-- End .col-lg-3 -->
@@ -446,6 +372,104 @@
 
        
     </div><!-- End .page-wrapper -->
-    <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+<button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{{!-- <script>
+var orderId ;
+$(document).ready(function(){
+    var settings = {
+  "url": "/create/orderId",
+  "method": "POST",
+  "timeout": 0,
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "data": JSON.stringify({
+    "amount": "5000"
+  }),
+};
+
+//creates new orderId everytime
+$.ajax(settings).done(function (response) {
+
+  orderId=response.orderId;
+  console.log(orderId);
+  $("button").show();
+});
+});
 
    
+document.getElementById('rzp-button1').onclick = function(e){
+	var options = {
+    "key": "rzp_test_xKJur4lyLcX0ZO", // Enter the Key ID generated from the Dashboard
+    "amount": "50000", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    "currency": "INR",
+    "name": "Rento tools",
+    "description": "Test Transaction",
+    "image": "https://example.com/your_logo",
+    "order_id":order.orderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    "handler": function (response){
+        alert(response.razorpay_payment_id);
+        alert(response.razorpay_order_id);
+        alert(response.razorpay_signature)
+    },
+
+
+	$.ajax(settings).done(function(response){
+		alert(JSON.stringify(response))
+	});
+    "theme": {
+        "color": "#3399cc"
+    }
+	};
+	var rzp1 = new Razorpay(options);
+rzp1.on('payment.failed', function (response){
+        alert(response.error.code);
+        alert(response.error.description);
+        alert(response.error.source);
+        alert(response.error.step);
+        alert(response.error.reason);
+        alert(response.error.metadata.order_id);
+        alert(response.error.metadata.payment_id);
+});
+    rzp1.open();
+    e.preventDefault();
+}
+</script> --}}
+
+{{!-- <form action="/payment/success" method="POST">
+  <script src="https://checkout.razorpay.com/v1/checkout.js"
+          data-key="YOUR_KEY_ID"
+          data-amount="{{orderAmount * 100}}"
+          data-currency="INR"
+          data-name="Your Company Name"
+          data-description="Order #{{orderId}}"
+          data-image="https://your-company-logo.png"
+          data-order_id="{{razorpayOrderId}}"
+          data-prefill.name="{{user.name}}"
+          data-prefill.email="{{user.email}}"
+          data-theme.color="#F37254"></script>
+  <input type="hidden" name="orderId" value="{{orderId}}">
+  <button type="submit">Pay now</button>
+</form> --}}

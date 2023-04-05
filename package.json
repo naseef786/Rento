@@ -22,7 +22,9 @@
     "morgan": "~1.9.1",
     "multer": "^1.4.5-lts.1",
     "nocache": "^3.0.4",
+    "razorpay": "^2.8.6",
     "throttled-queue": "^2.1.4",
+    "uuid": "^9.0.0",
     "validator": "^13.9.0"
   },
   "devDependencies": {

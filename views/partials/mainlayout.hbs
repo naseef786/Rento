@@ -31,6 +31,39 @@
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/skins/skin-demo-22.css">
     <link rel="stylesheet" href="/assets/css/demos/demo-22.css">
+    <script>
+    // public/js/main.js
+$(function() {
+  // Capture click event on add-to-wishlist button
+  $('.add-to-wishlist').click(function(event) {
+    event.preventDefault(); // prevent page reload
+    const productId = $(this).data('product-id'); // get the product ID from the data attribute
+    // Send AJAX request to add product to wishlist
+    $.ajax({
+      url: '/wishlist/add',
+      method: 'POST',
+      data: { productId: productId },
+      success: function(response) {
+        if (response.success) {
+          // Update UI to reflect change in wishlist
+          $(this).text('Added to Wishlist').prop('disabled', true);
+          // Get updated wishlist from server and render using Handlebars
+          $.get('/wishlist', function(data) {
+            const template = Handlebars.compile($('#wishlist-template').html());
+            $('#wishlist').html(template({ wishlist: data }));
+          });
+        } else {
+          alert('Product not found.');
+        }
+      },
+      error: function() {
+        alert('Error adding product to wishlist.');
+      }
+    });
+  });
+});
+
+</script>
 </head>
 <body>
 	

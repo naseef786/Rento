@@ -63,10 +63,6 @@ const userSchema = new mongoose.Schema
       ],
       address: [
         {
-          default: {
-            type: Boolean,
-            default: false
-          },
           firstname: {
             type: String,
             required: true

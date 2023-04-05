@@ -121,9 +121,10 @@
                                 </a>
 
                                 <div class="product-action-vertical">
-                                    <form action="/postwishlist/{{this.id}}" method="post">
-                                    <button type="submit" class="btn-product-icon btn-wishlist btn-expandable"><a ><span>add to wishlist</span><span>likes ({{ this.wishList.length }})</span></a></button>
-                                    </form>
+                                    {{!-- <form action="/postwishlist/{{this.id}}" method="post"> --}}
+                                   
+                                    {{!-- <button type="submit" class="btn-product-icon btn-wishlist btn-expandable"><a ><span>add to wishlist</span><span>likes ({{ this.wishList.length }})</span></a></button>
+                                    </form> --}}
                                 </div><!-- End .product-action-vertical -->
                             </figure><!-- End .product-media -->
 
@@ -133,6 +134,7 @@
                                 </div><!-- End .product-cat -->
                                 <h3 class="product-title"><a href="/productdetails/{{this.id}}">{{this.brand}}</a></h3><!-- End .product-title -->
                                 <div class="product-price">
+                                      <button class="add-to-wishlist" data-product-id="{{this.id}}">Add to Wishlist</button>
                                     <span class="new-price">{{this.price}}</span>
                                  
                                 </div><!-- End .product-price -->
@@ -169,3 +171,36 @@
     </div>
     
     <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+<script>
+    // public/js/main.js
+$(function() {
+  // Capture click event on add-to-wishlist button
+  $('.add-to-wishlist').click(function(event) {
+    event.preventDefault(); // prevent page reload
+    const productId = $(this).data('product-id'); // get the product ID from the data attribute
+    // Send AJAX request to add product to wishlist
+    $.ajax({
+      url: '/wishlist/add',
+      method: 'POST',
+      data: { productId: productId },
+      success: function(response) {
+        if (response.success) {
+          // Update UI to reflect change in wishlist
+          $(this).text('Added to Wishlist').prop('disabled', true);
+          // Get updated wishlist from server and render using Handlebars
+          $.get('/wishlist', function(data) {
+            const template = Handlebars.compile($('#wishlist-template').html());
+            $('#wishlist').html(template({ wishlist: data }));
+          });
+        } else {
+          alert('Product not found.');
+        }
+      },
+      error: function() {
+        alert('Error adding product to wishlist.');
+      }
+    });
+  });
+});
+
+</script>
