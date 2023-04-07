@@ -19,11 +19,12 @@ const {
       getsearch,
       getCategory,
       productDetails,
-      // postWishlist,
+      postWish,
+      postWishlist,
       wish,
       deleteWishlist,
       cartDelete,
-      wishlistCount,
+      //wishlistCount,
       placeorder,
       proceedOrder,
       // removeWish
@@ -33,6 +34,7 @@ const {
       UpdateProfile,
       checkoutaddAddress,
       orderSuccess,
+      wishlistCount,
      
 } = require("../controller/user");
 
@@ -59,7 +61,7 @@ router.get('/profile',profilePage);
 router.post('/updataprofile',UpdateProfile)
 
 //wishlist
-router.post('/wishlist/add',ifUser,wishlistCount)
+router.post('/wishlist',ifUser,wishlistCount)
 router.get('/Wishlist',ifUser,wish);
 router.post('/deletewish/:id',ifUser,deleteWishlist)
 // router.patch('/removewish',ifUserAxios,removeWish)

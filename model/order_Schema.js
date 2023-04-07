@@ -95,9 +95,6 @@ const { ObjectId} =require('mongodb')
             type: String,
             default: null
         },
-        cartDiscount: {
-            type: String
-        },
         subTotalPrice: {
             type: Number
         },

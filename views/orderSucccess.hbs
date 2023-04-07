@@ -5,9 +5,12 @@
     <title>Success</title>
   </head>
   <body>
-    <h1>Payment Successful!</h1>
-    <p>Payment ID: {{payment.id}}</p>
-    <p>Payment Status: {{payment.status}}</p>
-    <p>Amount: {{payment.amount}}</p>
+    <h1>Order Successful!</h1>
+    <p>Payment ID: {{data.id}}</p>
+    <p>Payment Status: {{data.status}}</p>
+    <p>Amount: {{data.totaPrice}}</p>
+    <p>orderstatus:{{data.orderStatus}}</p>
+    {{data.orderdate}}
+    {{data.orderId}}
   </body>
 </html>

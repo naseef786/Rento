@@ -31,39 +31,8 @@
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/skins/skin-demo-22.css">
     <link rel="stylesheet" href="/assets/css/demos/demo-22.css">
-    <script>
-    // public/js/main.js
-$(function() {
-  // Capture click event on add-to-wishlist button
-  $('.add-to-wishlist').click(function(event) {
-    event.preventDefault(); // prevent page reload
-    const productId = $(this).data('product-id'); // get the product ID from the data attribute
-    // Send AJAX request to add product to wishlist
-    $.ajax({
-      url: '/wishlist/add',
-      method: 'POST',
-      data: { productId: productId },
-      success: function(response) {
-        if (response.success) {
-          // Update UI to reflect change in wishlist
-          $(this).text('Added to Wishlist').prop('disabled', true);
-          // Get updated wishlist from server and render using Handlebars
-          $.get('/wishlist', function(data) {
-            const template = Handlebars.compile($('#wishlist-template').html());
-            $('#wishlist').html(template({ wishlist: data }));
-          });
-        } else {
-          alert('Product not found.');
-        }
-      },
-      error: function() {
-        alert('Error adding product to wishlist.');
-      }
-    });
-  });
-});
-
-</script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    
 </head>
 <body>
 	
@@ -103,9 +72,11 @@ $(function() {
                     
                               <a href="/wishlist" class="wishlist-link">
                             <i class="icon-heart-o"></i>
-                            {{#with user}}
-                            <span class="wishlist-count">{{this.wishList.length}}</span>
-                            {{/with}}
+                          
+                            <span class="wishlist-count">{{user.wishList.length}}</span>
+                        
+                        
+                            
                                 </a>
 
                       <div class="dropdown cart-dropdown">
@@ -223,9 +194,7 @@ $(function() {
                                         <ul><form action="/logout" method="post">
                                             <li><button type="submit" data-toggle="modal"class="icon-user" >LogOut</button></li></form>
                                             <li>
-                                        <button class="text-dark"><a href="/profile">{{#with user}}
-                                        {{this.name}}
-                                        {{/with}}</a></button>
+                                        <button class="text-dark"><a href="/profile"></a></button>
                                     </li>
                                         </ul>
                                     </li>
@@ -478,7 +447,27 @@ $(function() {
             </div><!-- End .modal-content -->
         </div><!-- End .modal-dialog -->
     </div><!-- End .modal -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+    // When user clicks the button, make an AJAX request to add item to wishlist
+    $('.add-to-wishlist').click(function() {
+    const itemID = $(this).data('item-id');
 
+    $.ajax({
+        url: '/wishlist',
+        method: 'POST',
+        data: { itemID: itemID },
+        success: (response) => {
+            console.log(response);
+            alert(response);
+        },
+        error: () => {
+            console.error('Error adding item to wishlist');
+            alert('Error adding item to wishlist');
+        }
+    });
+});
+</script>
 
 
     <script src="assets/js/jquery.min.js"></script>

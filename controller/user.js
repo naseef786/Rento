@@ -70,24 +70,23 @@ const postSignin = async (req, res) => {
 }
 const homePage = async (req, res) => {
     try {
-
-        await Products.find().then((items) => {
-            console.log(items);
-            if (items) {
-                Category.find().then((categories) => {
-                    console.log(categories);
-                    if (categories) {
-                        Users.findById(req.session.user_id).then(user => {
-                            console.log(user);
-                            res.render("userHome", { items, user, categories: categories, layout: "partials/mainlayout" })
-                        })
+      
+         
+       
+       let item =  await Products.find().sort({dateCreated:-1})
+       let items =  await Products.find()
+       let categories = await Category.find()
+       let user = await Users.findById(req.session.user_id)
+       req.session.user = user  
+       console.log(req.session);
+                            res.render("userHome", { items,item, user, categories: categories, layout: "partials/mainlayout" })
+              
 
                     }
-                })
-            }
-        })
-
-    }
+                
+            
+    
+    
     catch {
         res.status(500).send()
     }
@@ -112,8 +111,9 @@ const getCategory = async (req, res) => {
 
         console.log(id);
         const items = await Products.find({ category: id })
+        const category = await Category.findById(id)
         console.log(items)
-        res.render("viewProducts", { items, layout: '/partials/mainlayout' });
+        res.render("viewProducts", { items, layout: '/partials/mainlayout' ,category});
 
     }
     catch (err) {
@@ -363,26 +363,99 @@ const viewProducts =  async(req, res) => {
 
 
 
-const wishlistCount = async (req, res) => {
-    const productId = req.body.productId;
-    let user_id =req.session.user_id;
-    const user = await Users.findOne({ _id:user_id });
-    if (user) {
-      if (!user.wishList.includes(productId)) {
-        user.wishList.push(productId);
-        await user.save();
-        res.status(200).json({ success: true });
-      } else {
-        res.status(400).json({ success: false, message: 'Product already in wishlist' });
+// const wishlistCount = async (req, res) => {
+//     const productId = req.body.productId;
+//     let user_id =req.session.user_id;
+//     const user = await Users.findOne({ _id:user_id });
+//     if (user) {
+//       if (!user.wishList.includes(productId)) {
+//         user.wishList.push(productId);
+//         await user.save();
+//         res.status(200).json({ success: true });
+//       } else {
+//         res.status(400).json({ success: false, message: 'Product already in wishlist' });
+//       }
+//     } else {
+//       res.status(404).json({ success: false, message: 'User not found'})}
+//     }
+const wishlistCount = async (req,res)=>{
+    console.log(req.body);
+    const itemID = req.body.itemID;
+  const userID = req.session.user_id; // In this example we will hardcode the userID
+ let user = await Users.findById(userID)
+    
+      if (!user) {
+        // User not found
+        return res.status(404).send();
       }
-    } else {
-      res.status(404).json({ success: false, message: 'User not found'})}
+      const index = user.wishList.indexOf(itemID);
+      if (index === -1) {
+        user.wishList.push(itemID);
+        await user.save();
+        res.status(200).send({ message: 'Product added to wishlist.' });
+      } else {
+        user.wishList.splice(index, 1);
+        await user.save();
+        res.status(200).send({ message: 'Product removed from wishlist.' });
+      }
+      // Check if item is already in wishlist
+    //   if (user.wishList.includes(itemID)) {
+    //     return res.status(200).send(); // Item already in wishlist
+    //   }
+
+    //   // Add item to wishlist
+    //   user.wishList.push(itemID);
+    //   user.save()
+    //     .then(() => res.status(200).send())
+    //     .catch(err => console.error('Error saving user', err));
     }
+;
+
+
+        
+
+        //   let postWish = async (req, res, next) => {    
+        //     const { productId, action } = req.body;
+        //     const user = req.session.user_id;
+            
+        //     try {
+        //       const wishlist = await Users.findById(user);
+        //       if (!wishlist) {
+        //         throw new Error('User does not exist.');
+        //       } else {
+        //         if (action === 'add') {
+        //           // Add the product ID to the wishlist if it's not already there
+        //           if (!wishlist.wishList.includes(productId)) {
+        //             wishlist.wishList.push(productId);
+        //             await wishlist.save();
+        //             res.status(200).json({ message: 'Product added to wishlist.' });
+        //           } else {
+        //             res.status(200).json({ message: 'Product is already in wishlist.' });
+        //           }
+        //         } else if (action === 'remove') {
+        //           // Remove the product ID from the wishlist if it's there
+        //           if (wishlist.wishList.includes(productId)) {
+        //             wishlist.wishList = wishlist.wishList.filter(id => id !== productId);
+        //             await wishlist.save();
+        //             res.status(200).json({ message: 'Product removed from wishlist.' });
+        //           } else {
+        //             res.status(200).json({ message: 'Product is not in wishlist.' });
+        //           }
+        //         } else {
+        //           throw new Error('Invalid action.');
+        //         }
+        //       }
+        //     } catch(err) {
+        //       next(err);
+        //     }
+        //   };
+       
+   
 
 const deleteWishlist = async (req, res, next) => {
     try {
         let userId = req.session.user_id
-        await Users.findByIdAndUpdate(userId, { $pull: { wishList: { productId: req.params.id } } }).then(() => {
+        await Users.findByIdAndUpdate(userId, { $pull: { wishList: req.params.id  } }).then(() => {
 
             res.redirect('/wishlist')
         })
@@ -394,17 +467,7 @@ const deleteWishlist = async (req, res, next) => {
         next(error)
     }
 }
-const removeWish = async (req, res) => {
-    const userId = req.session.user_id; // Assuming that the user is authenticated and their ID is stored in the req.user object
-    const itemId = req.body.Id;
 
-    await Users.findByIdAndUpdate(userId, {
-        $pull: { wishList: itemId }
-    });
-
-    res.redirect('/wishlist');
-    // user.wishList = user.wishList.filter( productId => productId  !== itemId); // Remove the item ID from the wishlist array
-};
 
 // route handler for the wishlist page
 const wish = async (req, res) => {
@@ -415,7 +478,7 @@ const wish = async (req, res) => {
     // fetch the product details for each product id in the wishlist array
     const products = [];
     for (let i = 0; i < wishlistProducts.length; i++) {
-        const product = await Products.findById(wishlistProducts[i].productId);
+        const product = await Products.findById(wishlistProducts[i]);
         products.push(product);
     }
     console.log(products);
@@ -425,22 +488,24 @@ const wish = async (req, res) => {
 };
 
 
-const postWishlist = async (req, res) => {
+
+
+const postWishlist = async (req, res, next) => {
     try {
-        let userId = req.session.user_id
-        console.log(app.locals.session);
-        let wishlist = await Users.findOne({ _id: userId, 'wishList.productId': req.body.id })
-            .catch((error) => res.json({ response: error.message }))
-        if (wishlist) res.json({ response: "The Product is already in your wishlist" })
-        else {
-            await Users.findByIdAndUpdate(userId, { $push: { wishList: { productId: req.params.id } } })
-                .then(() => res.json({ response: false }))
-                .catch((error) => res.json({ response: "Something went wrong" }))
-        }
+      const userId = req.session.user_id;
+      const wishlist = await Users.findOne({ _id: userId, wishList: req.body.itemID });
+  
+      if (wishlist && wishlist.wishList.includes(req.body.itemID)) {
+        return res.json({ response: "The Product is already in your wishlist" });
+      }
+  
+      await Users.findByIdAndUpdate(userId, { $push: { wishList: req.body.itemID } })
+        .then(() => res.json({ response: true }))
+        .catch((error) => res.json({ response: "Something went wrong" }));
     } catch (error) {
-        next(error)
+      next(error);
     }
-}
+  };
 const userLogout = (req, res) => {
     req.session.destroy(err => {
         if (err) throw err;
@@ -534,23 +599,27 @@ const placeorder = async (req, res) => {
            coup.quantity--
            coup.save();
     const user = await Users.findOne({ _id: user_id })
-    let Cart = await user.cart
+    let Cart =  user.cart
     let items = []
     items.push(Cart)
     const totalPrice = user.cart.reduce((total, item) => {
         return total + item.total 
       }, 0);
-
+    const grandTotal = (coup.percentDiscount * totalPrice) / 100
+    const discount = totalPrice - grandTotal;
     let order = new Order({
         products: items,
         Address: AddressObj,
         status: req.body.status,
-        totalPrice: totalPrice,
         userId: user_id,
         deliveryAddress: delivery,
         couponCode: coup.couponCode,
         payment: req.body.payment,
-        orderId:randomstring
+        orderId:randomstring,
+        subTotalPrice: totalPrice,
+        discountPrice: discount,
+        totalPrice:grandTotal ,
+
     })
     order = await order.save().then(async (data) => {
         const orderId = data._id.toString()
@@ -559,6 +628,9 @@ const placeorder = async (req, res) => {
             await Users.updateOne({ _id: user_id }, {$set: { cart: []}})
             console.log(data);
             // res.json({ status: true })
+            res.render('orderSucccess',  {
+                data,
+                layout: "partials/mainlayout"})
         }
         else {
             var instance = new Razorpay({
@@ -761,14 +833,13 @@ module.exports = {
     cartDelete,
     cartUpdate,
     placeorder,
-    removeWish,
     getOrderCount,
     getOrders,
     deleteOrder,
     proceedOrder,
     checkoutaddAddress,
-    orderSuccess
-
+    orderSuccess,
+    
 
 
 

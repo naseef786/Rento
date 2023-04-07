@@ -1,15 +1,41 @@
 
-    <div class="page-wrapper">
+<div class="page-wrapper">
 
-        <main class="main">
 
-         
 
+    <main class="main">
+   <div class="container banner-container">
                 <div class="row">
-                    <div class="col-lg-8 col-12">
-                        <div class="intro-slider-container mt-2">
-                            <div class="intro-slider owl-carousel owl-theme owl-nav-inside owl-light" data-toggle="owl" 
-                                data-owl-options='{
+                    {{#each (limit categories 4)}}
+                    <div class="col-lg-6 col-md-6 col-sm-6 banner-lg">
+                        <a href="category.html">
+                            <img src="{{this.image}}">
+                        </a>
+                        <div class="banner-content">
+                            <div class="title">
+                                <a href="/getcategory/{{this.id}}">{{this.description}}</a>
+                            </div>
+                            <div class="content">
+                                <a href="/getcategory/{{this.id}}">
+                                    <h3 class="highlight">{{this.name}}</h3>
+                                    <h4>for the Toughest Jobs</h4>
+                                </a>
+                            </div>
+                            <div class="action">
+                                <a href="/getcategory/{{this.id}}">discover now</a>
+                            </div>
+                        </div>
+                    </div>
+                     {{/each}}
+                </div>
+            </div>
+
+
+        <div class="row">
+            <div class="col-lg-8 col-12">
+                <div class="intro-slider-container mt-2">
+                    <div class="intro-slider owl-carousel owl-theme owl-nav-inside owl-light" data-toggle="owl"
+                        data-owl-options='{
                                     "dots": true,
                                     "nav": true, 
                                     "responsive": {
@@ -19,88 +45,128 @@
                                         }
                                     }
                                 }'>
-                                <div class="intro-slide banner-lg" style="background-image: url(assets/images/demos/demo-22/slider/slide-1.jpg);">
-                                    <div class="intro">
-                                        <div class="title">
-                                            <a>deal of the day</a>
-                                        </div>
-                                        <div class="content">
-                                            <h3><span>up to</span> 20% <span>off</span></h3><h4>heavy duty deals</h4>
-                                        </div>
-                                        <div class="action">
-                                            <a href="/category">discover now</a>
-                                        </div>
-                                    </div>
-                                </div><!-- End .intro-slide -->
-
-                                <div class="intro-slide banner-lg" style="background-image: url(assets/images/demos/demo-22/slider/slide-2.jpg);">
-                                    <div class="intro">
-                                        <div class="title">
-                                            <a>clearance</a>
-                                        </div>
-                                        <div class="content">
-                                            <h3>power tools<br>up to <span>30% off</span></h3>
-                                        </div>
-                                        <div class="action">
-                                            <a href="/viewallproducts">discover now</a>
-                                        </div>
-                                    </div>
-                                </div><!-- End .intro-slide -->
-
-
-                                
-                            </div><!-- End .intro-slider owl-carousel owl-simple -->
-
-                            <span class="slider-loader"></span><!-- End .slider-loader -->
-                        </div><!-- End .intro-slider-container -->
-                    </div>
-                    <div class="col-lg-4 banner">
-                     {{#each (limit categories 3)}}
-                        <div class="col-12" style="background-image: url({{this.image}})">
-                            <div class="intro">
-                                <div class="title text-white">
-                                    <h3>{{this.name}}</h3>
-                                </div>
-                                <div class="content">
-                                    <h3>collect your </h3><h3 class="highlight">&nbsp;tools</h3>
-                                </div>
-                                <div class="action">
-                                    <a href="/getcategory/{{this.id}}">shop now</a>
-                                </div>
-                            </div>
-                        </div>
-                        {{/each}}
-                        {{!-- <div class="col-12" style="background-image: url(assets/images/demos/demo-22/slider/banner-2.jpg)">
+                        <div class="intro-slide banner-lg"
+                            style="background-image: url(assets/images/demos/demo-22/slider/slide-1.jpg);">
                             <div class="intro">
                                 <div class="title">
-                                    <h2>outdoor</h2>
+                                    <a>deal of the day</a>
                                 </div>
                                 <div class="content">
-                                    <h4>power equipment</h4>
+                                    <h3><span>up to</span> 20% <span>off</span></h3>
+                                    <h4>heavy duty deals</h4>
                                 </div>
                                 <div class="action">
-                                    <a href="category.html">shop now</a>
+                                    <a href="/category">discover now</a>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-12" style="background-image: url(assets/images/demos/demo-22/slider/banner-3.jpg)">
+                        </div><!-- End .intro-slide -->
+
+                        <div class="intro-slide banner-lg"
+                            style="background-image: url(assets/images/demos/demo-22/slider/slide-2.jpg);">
                             <div class="intro">
-                                <div  class="title">
-                                    <h3 class="highlight">save 20%</h3><h3>&nbsp;or more</h3>
+                                <div class="title">
+                                    <a>clearance</a>
                                 </div>
                                 <div class="content">
-                                    <h3>deals & savings</h3>
+                                    <h3>power tools<br>up to <span>30% off</span></h3>
                                 </div>
                                 <div class="action">
-                                    <a href="category.html">shop now</a>
+                                    <a href="/viewallproducts">discover now</a>
                                 </div>
                             </div>
-                        </div> --}}
+                        </div><!-- End .intro-slide -->
+
+
+
+                    </div><!-- End .intro-slider owl-carousel owl-simple -->
+
+                    <span class="slider-loader"></span><!-- End .slider-loader -->
+                </div><!-- End .intro-slider-container -->
+            </div>
+            <div class="col-lg-4 banner">
+                {{#each (limit categories 3)}}
+                <div class="col-12" style="background-image: url({{this.image}})">
+                    <div class="intro">
+                        <div class="title text-white">
+                            <h3>{{this.name}}</h3>
+                        </div>
+                        <div class="content">
+                            <h3>collect your </h3>
+                            <h3 class="highlight">&nbsp;tools</h3>
+                        </div>
+                        <div class="action">
+                            <a href="/getcategory/{{this.id}}">shop now</a>
+                        </div>
                     </div>
                 </div>
-            
-            
-   <div class="container popular">
+                {{/each}}
+              
+            </div>
+        </div>
+
+
+        <div class="container popular">
+            <hr class="mb-5">
+
+            <div class="section-title">
+                <div>
+                    <p class="title"><span>Latest Products</span></p>
+                </div>
+
+                <a class="link" href="#">See All Products</a>
+            </div>
+
+            <div class="row products">
+                {{#each (limit item 5 )}}
+
+                <div class="col-6 col-md-4 col-lg-3 col-xl-5col">
+                    <div class="product product-3 text-center">
+                        <figure class="product-media">
+                             <span class="product-label label-new">New</span>
+                            <a href="/productdetails/{{this.id}}">
+                                <img src="{{this.image}}" alt="Product image" style="width: 215px;  height: 209px;"
+                                    class="product-image">
+                            </a>
+
+                            <div class="product-action-vertical">
+                               
+                             <button data-item-id="{{this.id}}" class="add-to-wishlist btn-product-icon btn-wishlist btn-expandable"><a><span>add to
+                                            wishlist</span><span>likes ({{ this.wishList.length }})</span></a></button>
+
+                            </div><!-- End .product-action-vertical -->
+                        </figure><!-- End .product-media -->
+
+                        <div class="product-body">
+                            <div class="product-cat">
+                                <a href="/productdetails/{{this.id}}">{{this.name}}</a>
+                            </div><!-- End .product-cat -->
+                            <h3 class="product-title"><a href="/productdetails/{{this.id}}">{{this.brand}}</a></h3>
+                            <!-- End .product-title -->
+                            <div class="product-price">
+                                <span class="new-price">{{this.price}}</span>
+
+                            </div><!-- End .product-price -->
+                        </div><!-- End .product-body -->
+
+                        <div class="product-footer">
+                            <div class="product-action" style="">
+                                {{!-- <form action="/addtocart/{{this.id}}" method="post"> --}}
+                                    <a href="/productdetails/{{this.id}}" class="btn-product btn-cart"
+                                        type="submit"></a>
+
+                            </div><!-- End .product-action -->
+                        </div><!-- End .product-footer -->
+                    </div><!-- End .product -->
+                </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
+
+                {{/each}}
+            </div><!-- End .row -->
+
+        </div>
+
+        
+             
+        <div class="container popular">
                 <hr class="mb-5">
 
                 <div class="section-title">
@@ -110,97 +176,60 @@
                 </div>
 
                 <div class="row products">
-                      {{#each (limit items 5 )}}
-         
+                    {{#each items }}
                     <div class="col-6 col-md-4 col-lg-3 col-xl-5col">
                         <div class="product product-3 text-center">
                             <figure class="product-media">
+                               
                                 <span class="product-label label-sale">Sale</span>
                                 <a href="/productdetails/{{this.id}}">
-                                    <img src="{{this.image}}" alt="Product image" style="width: 215px;  height: 209px;" class="product-image">
+                                    <img src="{{this.image}}" alt="Product image" class="product-image">
                                 </a>
 
                                 <div class="product-action-vertical">
-                                    {{!-- <form action="/postwishlist/{{this.id}}" method="post"> --}}
-                                   
-                                    {{!-- <button type="submit" class="btn-product-icon btn-wishlist btn-expandable"><a ><span>add to wishlist</span><span>likes ({{ this.wishList.length }})</span></a></button>
-                                    </form> --}}
+                                    <a data-item-id="{{this.id}}" class="add-to-wishlist btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
                                 </div><!-- End .product-action-vertical -->
                             </figure><!-- End .product-media -->
 
                             <div class="product-body">
                                 <div class="product-cat">
-                                    <a href="/productdetails/{{this.id}}">{{this.name}}</a>
+                                    <a href="/productdetails/{{this.id}}">Air Tools & Compressors</a>
                                 </div><!-- End .product-cat -->
-                                <h3 class="product-title"><a href="/productdetails/{{this.id}}">{{this.brand}}</a></h3><!-- End .product-title -->
+                                <h3 class="product-title"><a href="/productdetails/{{this.id}}">Makita XCV11Z</a></h3><!-- End .product-title -->
                                 <div class="product-price">
-                                      <button class="add-to-wishlist" data-product-id="{{this.id}}">Add to Wishlist</button>
                                     <span class="new-price">{{this.price}}</span>
-                                 
+                                    {{!-- <span class="old-price">Was $330.00</span> --}}
                                 </div><!-- End .product-price -->
                             </div><!-- End .product-body -->
 
                             <div class="product-footer">
-                               
-                               
-
-                                <div class="product-action" style="">
-                                    {{!-- <form action="/addtocart/{{this.id}}" method="post"> --}}
-                                   <a  href="/productdetails/{{this.id}}" class="btn-product btn-cart" type="submit"></a>
                                 
+
+                             
+
+                                <div class="product-action">
+                                    <a href="/productdetails/{{this.id}}" class="btn-product btn-cart" title="Add to cart"></a>
+                                    <a href="/wishlist"  data-item-id="{{this.id}}"  class=" add-to-wishlist  btn-product btn-wishlist" title="add to wishlist"></a>
                                 </div><!-- End .product-action -->
-                            </div><!-- End .product-footer --> 
+                            </div><!-- End .product-footer -->
                         </div><!-- End .product -->
                     </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
-                
-                        {{/each}}
+{{/each}}
+                    
                 </div><!-- End .row -->
-               
             </div>
 
-        </main>
 
-       
-
-
-        <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+    </main>
 
 
-       
-       
-    </div>
-    
+
+
     <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
-<script>
-    // public/js/main.js
-$(function() {
-  // Capture click event on add-to-wishlist button
-  $('.add-to-wishlist').click(function(event) {
-    event.preventDefault(); // prevent page reload
-    const productId = $(this).data('product-id'); // get the product ID from the data attribute
-    // Send AJAX request to add product to wishlist
-    $.ajax({
-      url: '/wishlist/add',
-      method: 'POST',
-      data: { productId: productId },
-      success: function(response) {
-        if (response.success) {
-          // Update UI to reflect change in wishlist
-          $(this).text('Added to Wishlist').prop('disabled', true);
-          // Get updated wishlist from server and render using Handlebars
-          $.get('/wishlist', function(data) {
-            const template = Handlebars.compile($('#wishlist-template').html());
-            $('#wishlist').html(template({ wishlist: data }));
-          });
-        } else {
-          alert('Product not found.');
-        }
-      },
-      error: function() {
-        alert('Error adding product to wishlist.');
-      }
-    });
-  });
-});
 
-</script>
+
+
+
+</div>
+
+<button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
