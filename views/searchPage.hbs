@@ -19,7 +19,7 @@
                         <div class="product product-3 text-center">
                             <figure class="product-media">
                                 
-                                <a href="{{this.id}}">
+                                <a href="/productdetails/{{this.id}}">
                                     <img src="/../{{this.image}}" alt="Product image" class="product-image">
                                 </a>
 
@@ -28,9 +28,9 @@
 
                             <div class="product-body">
                                 <div class="product-cat">
-                                    <a href="#">{{this.discription}}</a>
+                                    <a href="/productdetails/{{this.id}}">{{this.discription}}</a>
                                 </div><!-- End .product-cat -->
-                                <h3 class="product-title"><a href="/admin/productdetails">{{this.name}}</a></h3><!-- End .product-title -->
+                                <h3 class="product-title"><a href="/productdetails/{{this.id}}">{{this.name}}</a></h3><!-- End .product-title -->
                                 <div class="product-price">
                                     <span class="new-price">{{this.price}} per day</span>
                                     {{!-- <span class="old-price">Was 200 perday</span> --}}
@@ -66,39 +66,38 @@
                         <div class="product product-3 text-center">
                             <figure class="product-media">
                                 
-                                <a href="{{this.id}}">
+                                <a href="/productdetails/{{this.id}}">
                                     <img src="/../{{this.image}}" alt="Product image" class="product-image">
                                 </a>
+                                 <div class="product-action-vertical">
+                               
+                             <button data-item-id="{{this.id}}" class="add-to-wishlist btn-product-icon btn-wishlist btn-expandable"><a><span>add to
+                                            wishlist</span><span>likes ({{ this.wishList.length }})</span></a></button>
+
+                            </div><!-- End .product-action-vertical -->
 
 
                             </figure><!-- End .product-media -->
 
                             <div class="product-body">
                                 <div class="product-cat">
-                                    <a href="#">{{this.discription}}</a>
+                                    <a href="/productdetails/{{this.id}}">{{this.discription}}</a>
                                 </div><!-- End .product-cat -->
-                                <h3 class="product-title"><a href="/admin/productdetails">{{this.name}}</a></h3><!-- End .product-title -->
+                                <h3 class="product-title"><a href="/productdetails/{{this.id}}">{{this.name}}</a></h3><!-- End .product-title -->
                                 <div class="product-price">
                                     <span class="new-price">{{this.price}} per day</span>
                                     {{!-- <span class="old-price">Was 200 perday</span> --}}
                                 </div><!-- End .product-price -->
                             </div><!-- End .product-body -->
 
-                            <div class="product-footer">
-                                <div class="ratings-container">
-                                  
-                                   
-                               
+                             <div class="product-footer">
+                            <div class="product-action" style="">
+                                {{!-- <form action="/addtocart/{{this.id}}" method="post"> --}}
+                                    <a href="/productdetails/{{this.id}}" class="btn-product btn-cart"
+                                        type="submit"></a>
 
-                               
-                                    <div class="row">
-                                      <a href="/admin/edit/{{this.id}}" class="text-success"><i class="fas fa-edit fa-lg mx-1"></i></a>
-                                      <a href="/admin/delete/{{this.id}}" class="text-danger"><i class="fas fa-trash fa-lg mx-1"></i></a>
-                                      {{!-- <a href="" class="btn-product btn-cart" title="Edit"></a> --}}
-                                    </div>
-                              
-                            </div><!-- End .product-footer -->
-                        </div><!-- End .product -->
+                            </div><!-- End .product-action -->
+                        </div><!-- End .product-footer -->
                         
                     </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
                     

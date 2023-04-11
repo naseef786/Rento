@@ -10,7 +10,11 @@ const mongoose = require("mongoose")
 const { sum } = require("lodash")
 const Razorpay = require('razorpay')
 const { v4: uuidv4 } = require('uuid');
-
+var instance = new Razorpay({
+    key_id: "rzp_test_xKJur4lyLcX0ZO",
+    key_secret: 'A5cyQ9fodN27Gwpgx5UlbmX0',
+})
+const crypto = require('crypto');
 
 
 const userLogin = (req, res) => {
@@ -70,35 +74,35 @@ const postSignin = async (req, res) => {
 }
 const homePage = async (req, res) => {
     try {
-      
-         
-       
-       let item =  await Products.find().sort({dateCreated:-1})
-       let items =  await Products.find()
-       let categories = await Category.find()
-       let user = await Users.findById(req.session.user_id)
-       req.session.user = user  
-       console.log(req.session);
-                            res.render("userHome", { items,item, user, categories: categories, layout: "partials/mainlayout" })
-              
 
-                    }
-                
-            
-    
-    
+
+
+        let item = await Products.find().sort({ dateCreated: -1 })
+        let items = await Products.find()
+        let categories = await Category.find()
+        let user = await Users.findById(req.session.user_id)
+        req.session.user = user
+        console.log(req.session);
+        res.render("userHome", { items, item, user, categories: categories, layout: "partials/mainlayout" })
+
+
+    }
+
+
+
+
     catch {
         res.status(500).send()
     }
 }
 
 const productDetails = async (req, res) => {
-    try{
-    console.log(req.params);
-    let id = req.params.id;
-    await Products.findOne({ _id: id }).then(data => res.render('product', { data, layout: "partials/mainlayout" }))
+    try {
+        console.log(req.params);
+        let id = req.params.id;
+        await Products.findOne({ _id: id }).then(data => res.render('product', { data, layout: "partials/mainlayout" }))
     }
-    catch(err){
+    catch (err) {
         console.log(err);
     }
 }
@@ -113,7 +117,7 @@ const getCategory = async (req, res) => {
         const items = await Products.find({ category: id })
         const category = await Category.findById(id)
         console.log(items)
-        res.render("viewProducts", { items, layout: '/partials/mainlayout' ,category});
+        res.render("viewProducts", { items, layout: '/partials/mainlayout', category });
 
     }
     catch (err) {
@@ -167,6 +171,7 @@ let getsearch = async (req, res) => {
 
     let regExp = new RegExp(`${query}`, 'i')
     let product = await Products.findOne({ name: { $regex: regExp } });
+    
     if (product) {
         await Products.findOne({ name: { $regex: regExp } })
             .then(cat => {
@@ -197,21 +202,14 @@ const cartPage = async (req, res) => {
     const currentUser = await Users.findById(req.session.user_id).populate('cart');
     console.log(req.session);
     const cartProducts = currentUser.cart;
-
     // fetch the product details for each product id in the CArtarray
     const Cart = [];
     for (let i = 0; i < cartProducts.length; i++) {
         const product = await Products.findById(cartProducts[i].product);
-
         Cart.push(product);
-
     }
     console.log(Cart);
-
-
     let coupdata = await Coupon.find()
-
-
     // pass the array of product details to the wishlist.hbs page
     res.render("userCart", { layout: "partials/mainlayout", Cart, coupdata, cartProducts })
 };
@@ -330,132 +328,53 @@ const cartDelete = (req, res, next) => {
 const faqPage = (req, res) => {
     res.render("faq", { layout: "partials/mainlayout" })
 }
-const viewProducts =  async(req, res) => {
-    await Products.find().then(data=>{
-        res.render("wholeProducts", { layout: "partials/mainlayout" ,data})
-            })
-   
+
+const viewProducts = async (req, res) => {
+    await Products.find().then(data => {
+        res.render("wholeProducts", { layout: "partials/mainlayout", data })
+    })
+
 }
-// const wishlistCount = async (req, res) => {
-//     const user_id = req.session.user_id;
-//     console.log(user_id);
-//     try {
-//         const user = await Users.findById(user_id)
-//         const product = await Products.findById(req.params.id);
-
-//         if (!product.wishList.includes({ user_id: user_id })) {
-//             let object = { productId: product.id }
-//             product.wishList.push(user_id);
-//             product.likeCount++;
-//             user.wishList.push(object)
-//             await product.save();
-//             await user.save();
-//             res.redirect('/');
-//         }
-//         else {
-//             return res.status(400).json({ msg: 'you have already liked this product' });
-//         }
-//     } catch (err) {
-//         console.error(err);
-//         res.status(500).send('Server Error');
-//     }
-// };
 
 
 
-// const wishlistCount = async (req, res) => {
-//     const productId = req.body.productId;
-//     let user_id =req.session.user_id;
-//     const user = await Users.findOne({ _id:user_id });
-//     if (user) {
-//       if (!user.wishList.includes(productId)) {
-//         user.wishList.push(productId);
-//         await user.save();
-//         res.status(200).json({ success: true });
-//       } else {
-//         res.status(400).json({ success: false, message: 'Product already in wishlist' });
-//       }
-//     } else {
-//       res.status(404).json({ success: false, message: 'User not found'})}
-//     }
-const wishlistCount = async (req,res)=>{
+
+const wishlistCount = async (req, res) => {
     console.log(req.body);
     const itemID = req.body.itemID;
-  const userID = req.session.user_id; // In this example we will hardcode the userID
- let user = await Users.findById(userID)
-    
-      if (!user) {
+    const userID = req.session.user_id; // In this example we will hardcode the userID
+    let user = await Users.findById(userID)
+    let product = await Products.findById(itemID)
+    if (!user) {
         // User not found
         return res.status(404).send();
-      }
-      const index = user.wishList.indexOf(itemID);
-      if (index === -1) {
-        user.wishList.push(itemID);
-        await user.save();
-        res.status(200).send({ message: 'Product added to wishlist.' });
-      } else {
-        user.wishList.splice(index, 1);
-        await user.save();
-        res.status(200).send({ message: 'Product removed from wishlist.' });
-      }
-      // Check if item is already in wishlist
-    //   if (user.wishList.includes(itemID)) {
-    //     return res.status(200).send(); // Item already in wishlist
-    //   }
-
-    //   // Add item to wishlist
-    //   user.wishList.push(itemID);
-    //   user.save()
-    //     .then(() => res.status(200).send())
-    //     .catch(err => console.error('Error saving user', err));
     }
-;
-
-
-        
-
-        //   let postWish = async (req, res, next) => {    
-        //     const { productId, action } = req.body;
-        //     const user = req.session.user_id;
-            
-        //     try {
-        //       const wishlist = await Users.findById(user);
-        //       if (!wishlist) {
-        //         throw new Error('User does not exist.');
-        //       } else {
-        //         if (action === 'add') {
-        //           // Add the product ID to the wishlist if it's not already there
-        //           if (!wishlist.wishList.includes(productId)) {
-        //             wishlist.wishList.push(productId);
-        //             await wishlist.save();
-        //             res.status(200).json({ message: 'Product added to wishlist.' });
-        //           } else {
-        //             res.status(200).json({ message: 'Product is already in wishlist.' });
-        //           }
-        //         } else if (action === 'remove') {
-        //           // Remove the product ID from the wishlist if it's there
-        //           if (wishlist.wishList.includes(productId)) {
-        //             wishlist.wishList = wishlist.wishList.filter(id => id !== productId);
-        //             await wishlist.save();
-        //             res.status(200).json({ message: 'Product removed from wishlist.' });
-        //           } else {
-        //             res.status(200).json({ message: 'Product is not in wishlist.' });
-        //           }
-        //         } else {
-        //           throw new Error('Invalid action.');
-        //         }
-        //       }
-        //     } catch(err) {
-        //       next(err);
-        //     }
-        //   };
+    const index = user.wishList.indexOf(itemID);
+    const wish = product.wishList.indexOf(userID);
+    if (index === -1 || wish === -1) {
        
+        user.wishList.push(itemID);
+        product.wishList.push(userID);
+        await user.save();
+        await product.save();
+        res.status(200).send({ message: 'Product added to wishlist.' });
+    } else {
+        user.wishList.splice(index, 1);
+        product.wishList.splice(wish,1)
+        await user.save();
+        await product.save();
+        res.status(200).send({ message: 'Product removed from wishlist.' });
+    }
    
+}
+    ;
+
+
 
 const deleteWishlist = async (req, res, next) => {
     try {
         let userId = req.session.user_id
-        await Users.findByIdAndUpdate(userId, { $pull: { wishList: req.params.id  } }).then(() => {
+        await Users.findByIdAndUpdate(userId, { $pull: { wishList: req.params.id } }).then(() => {
 
             res.redirect('/wishlist')
         })
@@ -489,23 +408,6 @@ const wish = async (req, res) => {
 
 
 
-
-const postWishlist = async (req, res, next) => {
-    try {
-      const userId = req.session.user_id;
-      const wishlist = await Users.findOne({ _id: userId, wishList: req.body.itemID });
-  
-      if (wishlist && wishlist.wishList.includes(req.body.itemID)) {
-        return res.json({ response: "The Product is already in your wishlist" });
-      }
-  
-      await Users.findByIdAndUpdate(userId, { $push: { wishList: req.body.itemID } })
-        .then(() => res.json({ response: true }))
-        .catch((error) => res.json({ response: "Something went wrong" }));
-    } catch (error) {
-      next(error);
-    }
-  };
 const userLogout = (req, res) => {
     req.session.destroy(err => {
         if (err) throw err;
@@ -513,57 +415,6 @@ const userLogout = (req, res) => {
     })
 }
 
-// const placeorder = async (req,res)=>{
-
-//         try {
-//           // Find the product by ID
-//           const product = await Products.findById(req.body.productId);
-//           if (!product) {
-//             return res.status(404).json({ message: 'Product not found' });
-//           }
-//           let price = req.body.price;
-//           let quantity = req.body.quantity;
-//           let days = req.body.days;
-//           // Create a new order for the product
-//           const order = new Order({
-//             customerName: req.body.userName,
-//             product: {
-//               name: product.name,
-//               price: product.price,
-//               image: product.image,
-//             },
-//             quntity:req.body.quntity,
-//             days:req.body.days,
-//             quantity: req.body.quantity,
-//             total:price*days*quantity,
-//           });
-
-//           // Save the order to the database
-//           const newOrder = await order.save();
-//           res.status(201).json(newOrder);
-//         } catch (err) {
-//           res.status(400).json({ message: err.message });
-//         }
-//       };
-
-
-
-
-
-
-// const orderItemsIds = Promise.all(req.body.orderItems.map(async (orderItem) =>{
-//     let newOrderItem = new OrderItem({
-//         quantity: orderItem.quantity,
-//         product: orderItem.product,
-//         daysOfRent: orderItem.daysOfRent
-
-//     })
-
-//     newOrderItem = await newOrderItem.save();
-
-//     return newOrderItem._id;
-// }))
-// const orderItemsIdsResolved =  await orderItemsIds;
 const placeorder = async (req, res) => {
 
     console.log(req.body);
@@ -584,84 +435,147 @@ const placeorder = async (req, res) => {
         lastname: req.body.lastname,
         pincode: req.body.pincode,
         Address: req.body.address,
-
     }
-    try{
-     let userad = await Users.findById(user_id)
-     userad.address.push(AddressObj)
-     userad.save().then(data=>console.log(data))
-    let coupon = req.body.couponcode;
-    const randomstring = uuidv4().slice(0, 5);
-    console.log(randomstring, "random string");
+    try {
+        let userad = await Users.findById(user_id)
+        userad.address.push(AddressObj)
+        userad.save().then(data => console.log(data))
+        let coupon = req.body.couponcode;
+        const randomstring = uuidv4().slice(0, 5);
+        console.log(randomstring, "random string");
 
-     let coup = await Coupon.findOneAndUpdate({ coupenCode: coupon })
-           coup.users.push(user_id)
-           coup.quantity--
-           coup.save();
-    const user = await Users.findOne({ _id: user_id })
-    let Cart =  user.cart
-    let items = []
-    items.push(Cart)
-    const totalPrice = user.cart.reduce((total, item) => {
-        return total + item.total 
-      }, 0);
-    const grandTotal = (coup.percentDiscount * totalPrice) / 100
-    const discount = totalPrice - grandTotal;
-    let order = new Order({
-        products: items,
-        Address: AddressObj,
-        status: req.body.status,
-        userId: user_id,
-        deliveryAddress: delivery,
-        couponCode: coup.couponCode,
-        payment: req.body.payment,
-        orderId:randomstring,
-        subTotalPrice: totalPrice,
-        discountPrice: discount,
-        totalPrice:grandTotal ,
+        let coup = await Coupon.findOneAndUpdate({ coupenCode: coupon })
+        coup.users.push(user_id)
+        coup.quantity--
+        coup.save();
+        const user = await Users.findOne({ _id: user_id })
+        let Cart = user.cart
+        let items = []
+        items.push(Cart)
+        console.log(items);
+    
+        const totalPrice = user.cart.reduce((total, item) => {
+            return total + item.total
+        }, 0);
+        const grandTotal = (coup.percentDiscount * totalPrice) / 100
+        const discount = totalPrice - grandTotal;
 
-    })
-    order = await order.save().then(async (data) => {
-        const orderId = data._id.toString()
-        console.log(orderId);
-        if (data.payment == 'COD') {
-            await Users.updateOne({ _id: user_id }, {$set: { cart: []}})
-            console.log(data);
-            // res.json({ status: true })
-            res.render('orderSucccess',  {
-                data,
-                layout: "partials/mainlayout"})
-        }
-        else {
-            var instance = new Razorpay({
-                key_id: "rzp_test_xKJur4lyLcX0ZO",
-                key_secret: 'A5cyQ9fodN27Gwpgx5UlbmX0',
-            })
-            let amount = totalPrice
-           const response = await instance.orders.create({
-                amount: amount * 100,
-                currency: "INR",
-                receipt: orderId,
-                payment_capture: 1
-            })
-            console.log(response);
-            res.render('checkoutform', {
-                key: "rzp_test_xKJur4lyLcX0ZO",
-                orderId: response.id,
-                amount: response.amount,
-                name: user.name,
-                email: user.email,
-                contactNumber: user.mobile,
-                layout: "partials/mainlayout"
-              });
-        }
-    })
-}catch (error){
-    console.log(error);
-    res.status(500).send(error);
+        
+        let order = new Order({
+            products: items,
+            Address: AddressObj,
+            status: req.body.status,
+            userId: user_id,
+            deliveryAddress: delivery,
+            couponCode: coup.couponCode,
+            payment: req.body.payment,
+            subTotalPrice: totalPrice,
+            discountPrice: discount,
+            totalPrice: grandTotal,
+
+        })
+        order = order.save().then(async (data) => {
+            const orderId = data._id.toString()
+            console.log(orderId);
+            req.session.orderdata = data;
+            if (data.payment == 'COD') {
+                await Users.updateOne({ _id: user_id }, { $set: { cart: [] } })
+                console.log(data);
+                // res.json({ status: true })
+                res.render('orderSucccess', {
+                    data,
+                    layout: "partials/mainlayout"
+                })
+            }
+            else {
+             
+                let amount = totalPrice
+                req.session.amount = totalPrice*100
+                const response = await instance.orders.create({
+                    amount: amount * 100,
+                    currency: "INR",
+                    receipt: orderId,
+
+                })
+                console.log(response);
+                res.render('checkoutform', {
+                    key_id: instance.key_id,
+                    orderId: response.id,
+                    amount: amount,
+                    name: user.name,
+                    email: user.email,
+                    contactNumber: user.mobile,
+                    response: response,
+                    layout: "partials/mainlayout"
+                });
+            }
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).send(error);
+    }
+
+
 }
 
-   
+
+let orderSuccess = async (req, res,next) => {
+    console.log(req.body,);
+    const amount = req.session.amount;
+    const order_id = req.body.order_id;
+    const payment_id = req.body.payment_id;
+    const signature = req.body.signature;
+    let user_id = req.body.user_id;
+ 
+    try {
+const message = order_id + '|' + payment_id;
+const generated_signature = crypto.createHmac('sha256', instance.key_secret)
+    .update(message)
+    .digest('hex');
+if (generated_signature === signature) {
+    console.log(req.session);
+    const orderid = req.session.orderdata._id
+   let order = await Order.findOneAndUpdate({ _id: orderid }, {
+        $set: {
+            paymentStatus: "Completed",
+        },
+    })
+    order.save();
+    let user = await Users.findOneAndUpdate({_id:user_id})
+       
+        await Products.find().then(async productsIn => {
+          
+        for (let i = 0; i < user.cart.length; i++) {
+            for (let j = 0; j < productsIn.length; j++) {
+                if (user.cart[i].product == productsIn[j]._id) {
+                    const pdtq = productsIn[j].countInStock - user.cart[i].quantity
+                    console.log(pdtq);
+                      await  Products.findOneAndUpdate({ _id: productsIn[j]._id }, { $set: { countInStock: pdtq } })
+                  
+                }
+               
+            }
+        }
+    })
+    
+           user.set({cart:[]})
+           user.orders.push(order._id) 
+           user.save()
+        
+    res.json({
+        payment: true,
+        orderid: req.session.orderdata._id,
+    })
+} else {
+    res.json({
+        payment: false,
+        orderid: req.session.orderid
+    })
+}
+} catch (error) {
+console.log(error.message)
+next(error)
+}
 }
 
 
@@ -672,9 +586,26 @@ const placeorder = async (req, res) => {
 
 
 
+const orderSuccessVerified = async (req, res) => {
+    let id = req.params.id
+    let order = await Order.findById(id).populate('products.Object').exec()
+    console.log(order);
 
-
-
+    console.log(order);
+    // const orderedProducts = order.products;
+    // const products = order.products.map((product) => {
+    //     return {
+    //       name: product.productName,
+    //     };
+    //   });
+  
+     res.render('orderSucccess', {
+         order,
+         layout: "partials/mainlayout"
+     })
+ 
+ }
+ 
 
 
 
@@ -696,13 +627,14 @@ const checkoutPage = async (req, res) => {
 }
 
 
-const deleteOrder = (req, res) => {
+const deleteOrder = async (req, res) => {
     Order.findByIdAndRemove(req.params.id).then(async order => {
         if (order) {
-            await order.orderItems.map(async orderItem => {
-                await OrderItem.findByIdAndRemove(orderItem)
-            })
-            return res.status(200).json({ success: true, message: 'the order is deleted!' })
+          
+                await Order.findByIdAndRemove(req.params.id)
+        
+            res.redirect('/getOrder')
+            // return res.status(200).json({ success: true, message: 'the order is deleted!' })
         } else {
             return res.status(404).json({ success: false, message: "order not found!" })
         }
@@ -722,21 +654,15 @@ const getOrderCount = async (req, res) => {
 }
 
 const getOrders = async (req, res) => {
-    const userOrderList = await Order.find({ user: req.params.userid }).populate({
-        path: 'orderItems', populate: {
-            path: 'product', populate: 'category'
-        }
-    }).sort({ 'dateOrdered': -1 });
+    let userId = req.session.user_id
+    let user = await Users.findOne({_id:userId})
+   
+    let order = await Order.findById(user.orders).populate('products.Object').exec()
+    console.log(order);
+  
+    res.render("orderPage",{ layout: "partials/mainlayout" , order,user:user});
+}
 
-    if (!userOrderList) {
-        res.status(500).json({ success: false })
-    }
-    res.send(userOrderList);
-}
-const proceedOrder = (req, res) => {
-    console.log(req.body);
-    res.render('check');
-}
 
 
 
@@ -772,36 +698,9 @@ const checkoutaddAddress = async (req, res) => {
 
 
 
-let orderSuccess = async (req, res) => {
-    const amount = req.body.amount;
-        const order_id = req.body.orderId;
-        const payment_id = req.body.razorpay_payment_id;
-        const signature = req.body.razorpay_signature;
-        // console.log(req.body);
-        var instance = new Razorpay({
-            key_id: "rzp_test_xKJur4lyLcX0ZO",
-            key_secret: 'A5cyQ9fodN27Gwpgx5UlbmX0',
-        })
-        try {
-           req.params.handler
-          const result = await instance.payments.capture(payment_id, amount);
-          console.log(result);
-      
-          // render success page with order details
-          res.render('success', {
-            title: 'Payment Success',
-            orderId: order_id,
-            paymentId: payment_id,
-            signature: signature
-          });
-        } catch (error) {
-          console.log(error);
-          res.render('failure', {
-            title: 'Payment Failure',
-            message: error.message
-          });
-        }
-      };
+
+
+
 
 
 
@@ -827,7 +726,6 @@ module.exports = {
     getsearch,
     getCategory,
     productDetails,
-    postWishlist,
     deleteWishlist,
     wish,
     cartDelete,
@@ -836,10 +734,11 @@ module.exports = {
     getOrderCount,
     getOrders,
     deleteOrder,
-    proceedOrder,
     checkoutaddAddress,
     orderSuccess,
-    
+    orderSuccessVerified
+
+
 
 
 

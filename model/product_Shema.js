@@ -44,10 +44,10 @@ const productSchema = new mongoose.Schema({
         default:Date.now,
     },
     wishList:[ {
-        user_id: {
+      
           type: mongoose.Schema.Types.ObjectId,
             ref: 'users',
-        }
+        
     }]
 
 });

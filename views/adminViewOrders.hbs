@@ -1,129 +1,93 @@
-<div class="row">
-                        <div class="col-lg-12 col-md-12 grid-margin">
-                            <div class="card card-white h-100">
-                                <div class="card-heading clearfix">
-                                    <h4 class="card-title">Latest Transaction</h4>
-                                </div>
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table mb-0">
-                                            <thead class="bg-light">
-                                                <tr>
-                                                    <th>
-                                                        <div class="custom-control custom-checkbox">
-                                                            <input type="checkbox" class="custom-control-input" id="customCheck1">
-                                                            <label class="custom-control-label" for="customCheck1">&nbsp;</label>
-                                                        </div>
-                                                    </th>
-                                                    <th>Order ID</th>
-                                                    <th>Billing Name</th>
-                                                    <th>Date</th>
-                                                    <th>Total</th>
-                                                    <th>Order Status</th>
-                                                    <th>Payment Method</th>
-                                                    <th>View Details</th>
-                                                    <th>Action</th>
-                                                    <th> PaymentAction</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {{!-- {{#each orderList}} --}}
-                                                <tr>
-                                                    <td>
-                                                        <div class="custom-control custom-checkbox">
-                                                            <input type="checkbox" class="custom-control-input" id="customCheck2">
-                                                            <label class="custom-control-label" for="customCheck2">&nbsp;</label>
-                                                        </div>
-                                                    </td>
-                                                    <td><a href="#">{{this.orderId}}</a> </td>
-                                                    <td>{{this.deliveryAddress.firstName}} {{this.deliveryAddress.lastName}}</td>
-                                                    <td>
-                                                        {{!-- {{this.Order_date}} --}}
-                                                    </td>
-                                                    <td>
-                                                        {{!-- ₹{{this.totalPrice}} --}}
-                                                    </td>
-                                                    <td id="status{{this.orderId}}">
-                                                        {{!-- {{#equal this.orderStatus "delivered"}} --}}
-                                                         <span class="badge rounded-pill bg-soft-green">Delivered</span>
-                                                       {{!-- {{/equal}}
-                                                       {{#equal this.orderStatus "cancelled"}} --}}
-                                                         <span class="badge rounded-pill bg-soft-pink">Cancelled</span>
-                                                       {{!-- {{/equal}}
-                                                       
-                                                       {{#equal this.orderStatus "processing"}} --}}
-                                                       <span class="badge rounded-pill bg-soft-orange">Processing</span>
-                                                       {{!-- {{/equal}}
-                                                       {{#equal this.orderStatus "Confirmed"}} --}}
-                                                         <span class="badge rounded-pill bg-soft-green">Confirmed</span>
-                                                       {{!-- {{/equal}}
-                                                       {{#equal this.orderStatus "returned"}} --}}
-                                                         <span class="badge rounded-pill bg-soft-pink">Returned</span>
-                                                       {{!-- {{/equal}} --}}
-                                                        
-                                                        
-                                                        
+<link rel="stylesheet" href="   https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+ <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></script>
+    <script src="/../Rento/public/javascripts/wish.js"></script>
 
-                                                    </td>
-                                                    <td>
-                                                      {{!-- {{this.Payment}} --}}
-                                                    </td>
-                                                    <td>
-                                                        <a href="/admin/orders?orderreq={{this.orderId}}"><button type="button" class="btn btn-primary btn-sm btn-rounded">
-                                                            View Details
-                                                        </button></a> 
-                                                    </td>
-                                                    <td class="">
-                                                        <div class="drop">
-  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-    Action
-  </button>
-  <ul class="dropdown-menu" id="drop{{this.orderId}}"  aria-labelledby="dropdownMenuButton1">
-    {{!-- {{#equal this.orderStatus "Confirmed"}} --}}
-     <li><a class="dropdown-item" onclick="edit('{{this.orderId}}','processing')" >Process Order</a></li>
-    <li><a class="dropdown-item"   onclick="edit('{{this.orderId}}','cancelled')"   >Cancel Order</a></li> 
-    <li><a class="dropdown-item"    onclick="edit('{{this.orderId}}','returned')"   >Return Order</a></li>                                                   
-    {{!-- {{/equal}}
-    {{#equal this.orderStatus "processing"}} --}}
-    <li><a class="dropdown-item" onclick="edit('{{this.orderId}}','delivered')" >Deliver Order</a></li>
-    <li><a class="dropdown-item"    onclick="edit('{{this.orderId}}','cancelled')"   >Cancel Order</a></li>
-      <li><a class="dropdown-item"    onclick="edit('{{this.orderId}}','returned')"   >Return Order</a></li>                                                  
-    {{!-- {{/equal}}
-    {{#equal this.orderStatus "delivered"}} --}}
-      <li><a class="dropdown-item"    onclick="edit('{{this.orderId}}','returned')"   >Return Order</a></li>                                                  
-    {{!-- {{/equal}} --}}
-  </ul>
-</div>
 
-                                                    </td>
-
-       <td class="">
-                                                        <div class="drop">
-  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-   Payment
-  </button>
-  <ul class="dropdown-menu" id="paymentdrop{{this.orderId}}"  aria-labelledby="dropdownMenuButton1">
-    {{!-- {{#equal this.paymentStatus "pending"}} --}}
-     <li><a class="dropdown-item" onclick="editPayment('{{this.orderId}}','paid')" >Payment Success</a></li>
-    <li><a class="dropdown-item"   onclick="editPayment('{{this.orderId}}','pending')"   >Pending</a></li> 
-    <li><a class="dropdown-item"    onclick="editPayment('{{this.orderId}}','refund')"   >Refund</a></li>                                                   
-    {{!-- {{/equal}}
-    {{#equal this.paymentStatus "paid"}} --}}
-    <li><a class="dropdown-item"    onclick="editPayment('{{this.orderId}}','refund')"   >Refund</a></li>                                                  
-    {{!-- {{/equal}} --}}
-    
-  </ul>
-</div>
-
-                                                    </td>                                             
-                                                </tr>
-                                            {{!-- {{/each }} --}}
-                                               
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+  <main>
+<div class="page-wrapper">
+ 
+<div class="container mt-5">
+        <div class="d-flex justify-content-center row">
+            <div class="col-md-10">
+                <div class="rounded">
+                    <div class="table-responsive table-borderless">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">
+                                        <div class="toggle-btn">
+                                            <div class="inner-circle"></div>
+                                        </div>
+                                    </th>
+                                    <th>Order #</th>
+                                    <th>Company name</th>
+                                    <th>status</th>
+                                    <th>Total</th>
+                                    <th>Created</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-body">
+                                <tr class="cell-1">
+                                    <td class="text-center">
+                                        <div class="toggle-btn">
+                                            <div class="inner-circle"></div>
+                                        </div>
+                                    </td>
+                                    <td>#SO-13487</td>
+                                    <td>Gasper Antunes</td>
+                                    <td><span class="badge badge-success">Fullfilled</span></td>
+                                    <td>$2674.00</td>
+                                    <td>Today</td>
+                                    <td><i class="fa fa-ellipsis-h text-black-50"></i></td>
+                                </tr>
+                                <tr class="cell-1">
+                                    <td class="text-center">
+                                        <div class="toggle-btn">
+                                            <div class="inner-circle"></div>
+                                        </div>
+                                    </td>
+                                    <td>#SO-13453</td>
+                                    <td>Aartsen van</td>
+                                    <td><span class="badge badge-info">Confirmed</span></td>
+                                    <td>$3454.00</td>
+                                    <td>Yesterday</td>
+                                    <td><i class="fa fa-ellipsis-h text-black-50"></i></td>
+                                </tr>
+                                <tr class="cell-1">
+                                    <td class="text-center">
+                                        <div class="toggle-btn">
+                                            <div class="inner-circle"></div>
+                                        </div>
+                                    </td>
+                                    <td>#SO-13498</td>
+                                    <td>Trashes Habard</td>
+                                    <td><span class="badge badge-danger">Partially shipped</span></td>
+                                    <td>$6274.00</td>
+                                    <td>May 12,2020</td>
+                                    <td><i class="fa fa-ellipsis-h text-black-50"></i></td>
+                                </tr>
+                                <tr class="cell-1">
+                                    <td class="text-center">
+                                        <div class="toggle-btn">
+                                            <div class="inner-circle"></div>
+                                        </div>
+                                    </td>
+                                    <td>#SO-16499</td>
+                                    <td>Samban Hubart</td>
+                                    <td><span class="badge badge-success">Fullfilled</span></td>
+                                    <td>$6375.00</td>
+                                    <td>May 11,2020</td>
+                                    <td><i class="fa fa-ellipsis-h text-black-50"></i></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <!-- end row -->
+                </div>
+            </div>
+        </div>
+</div>
+    </div>
+ </main>

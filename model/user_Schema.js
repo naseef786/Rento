@@ -56,7 +56,7 @@ const userSchema = new mongoose.Schema
 
         { type: mongoose.Types.ObjectId, ref: 'products' }
       ],
-      address: [
+      address: [ 
         {
           firstname: {
             type: String,
@@ -92,6 +92,10 @@ const userSchema = new mongoose.Schema
           }
         }
       ],
+      orders: [
+
+        { type: mongoose.Types.ObjectId, ref: 'orders' }
+      ]
 
     });
 

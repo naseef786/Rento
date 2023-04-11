@@ -7,7 +7,6 @@ const {
       contactPage,
       homePage,
       profilePage,
-      // wishlistPage,
       cartPage,
       checkoutPage,
       faqPage,
@@ -19,15 +18,12 @@ const {
       getsearch,
       getCategory,
       productDetails,
-      postWish,
       postWishlist,
       wish,
       deleteWishlist,
       cartDelete,
-      //wishlistCount,
       placeorder,
       proceedOrder,
-      // removeWish
       getOrderCount,
       getOrders,
       deleteOrder,
@@ -35,6 +31,8 @@ const {
       checkoutaddAddress,
       orderSuccess,
       wishlistCount,
+      orderSuccessVerified
+      
      
 } = require("../controller/user");
 
@@ -79,8 +77,13 @@ router.post('/checkout',checkoutPage)
 router.get('/proceedOrder',userCart,ifUser,placeorder)
 // router.get('/placeOrder',proceedOrder)
 router.post('/placeOrder',placeorder)
+router.get('/viewOrders',getOrders)
+router.post('/cancelOrder/:id',deleteOrder)
 //logout
 router.post('/logout',userLogout)
 router.post('/success',orderSuccess)
+router.get('/confirmation/:id',orderSuccessVerified)
+
+
 
 module.exports = router;

@@ -3,9 +3,7 @@ const mongoose = require('mongoose');
 const { ObjectId} =require('mongodb')
 
     const orderSchema = new mongoose.Schema({
-        orderId: {
-            type: String,
-        },
+    
         userId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
@@ -69,12 +67,12 @@ const { ObjectId} =require('mongodb')
             required: true,
             default: "COD"
         },
-        paypalDetails: {
-            id: {
+        razorPayDetails: {
+            orderId: {
                 type: String,
                 default: null
             },
-            payer_id: {
+            paymentId: {
                 type: String,
                 default: null
             }
@@ -97,10 +95,6 @@ const { ObjectId} =require('mongodb')
         },
         subTotalPrice: {
             type: Number
-        },
-        discountPrice: {
-            type: Number,
-            default: 0
         },
         totalPrice: {
             type: Number

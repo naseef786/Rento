@@ -445,7 +445,7 @@ const postCreateCoupon = async (req, res, next) => {
 const manageCoupons = async (req, res) => {
   await Coupon.find().then(data => {
     console.log(data);
-    res.render('adminViewCoupons', { data, layout: '/partials/layout' })
+    res.render('adminViewCoupons', { data, layout:'/partials/layout' })
   })
 }
 const deleteCoupon = async(req,res)=>{
@@ -457,12 +457,10 @@ const deleteCoupon = async(req,res)=>{
 }
 
 const manageOrder = async (req,res)=>{
-    const orderList = await Order.find().populate('user', 'name').sort({'dateOrdered': -1});
-
-    if(!orderList) {
-        res.status(500).json({success: false})
-    } 
-    res.render('adminViewOrders',orderList)
+    const orderList = await Order.find()
+    // .populate('userId').sort({'dateOrdered': -1});
+   
+    res.render('adminViewOrders',{orderList,layout: '/partials/layout' })
 }
 const orderDetails = async (req, res) =>{
   const order = await Order.findById(req.params.id)
@@ -510,6 +508,7 @@ module.exports = {
   adminManageUsers,
   manageOrder,
   deleteCoupon,
+  orderDetails
   
 
 }
