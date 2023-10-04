@@ -8,7 +8,7 @@
                 <div class="row">
                     {{#each (limit categories 4)}}
                     <div class="col-lg-6 col-md-6 col-sm-6 banner-lg">
-                        <a href="category.html">
+                        <a href="/getcategory/{{this.id}}">
                             <img src="{{this.image}}">
                         </a>
                         <div class="banner-content">
@@ -18,7 +18,7 @@
                             <div class="content">
                                 <a href="/getcategory/{{this.id}}">
                                     <h3 class="highlight">{{this.name}}</h3>
-                                    <h4>for the Toughest Jobs</h4>
+                                    <h4>{{this.description}}</h4>
                                 </a>
                             </div>
                             <div class="action">
@@ -31,7 +31,7 @@
             </div>
 
 
-        <div class="row">
+        {{!-- <div class="row">
             <div class="col-lg-8 col-12">
                 <div class="intro-slider-container mt-2">
                     <div class="intro-slider owl-carousel owl-theme owl-nav-inside owl-light" data-toggle="owl"
@@ -52,7 +52,7 @@
                                     <a>deal of the day</a>
                                 </div>
                                 <div class="content">
-                                    <h3><span>up to</span> 20% <span>off</span></h3>
+                
                                     <h4>heavy duty deals</h4>
                                 </div>
                                 <div class="action">
@@ -102,7 +102,7 @@
                 {{/each}}
               
             </div>
-        </div>
+        </div> --}}
 
 
         <div class="container popular">
@@ -163,6 +163,20 @@
             </div><!-- End .row -->
 
         </div>
+    <div class="container bannerad">
+                <div class="banner-lg"  style="background-image: url(assets/images/demos/demo-22/bannerad/background.jpg);">
+                    <div class="price">
+                        <h4 class="highlight">from</h3><h3>$39</h3><sup class="highlight">,99</sup>
+                    </div>
+                    <div class="content">
+                        <h4>woodworking tools</h4>
+                        <h3>from top rated brands</h3>
+                        <div class="action">
+                            <a href="/getAllCategory">discover now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         
              

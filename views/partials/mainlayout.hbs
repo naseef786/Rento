@@ -32,6 +32,7 @@
     <link rel="stylesheet" href="/assets/css/skins/skin-demo-22.css">
     <link rel="stylesheet" href="/assets/css/demos/demo-22.css">
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+       
     
 </head>
 <body>
@@ -115,7 +116,7 @@
                     <div class="container">
                         <div class="header-left">
                             <div class="dropdown category-dropdown" data-visible="true">
-                                <a href="/catagory" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-display="static" title="Browse Categories">
+                                <a href="/getAllCategory" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-display="static" title="Browse Categories">
                                     Browse Categories
                                 </a>
 
@@ -206,21 +207,19 @@
                     </div><!-- End .header-center -->
 
                         <div class="header-right ">
-                            <div class="text-dark">
+                             <div class="header-text">
                                 <ul class="top-menu top-link-menu">
-                                   
                                     <li>
-                                        <ul><form action="/logout" method="post">
-                                            <li><button type="submit" data-toggle="modal"class="icon-user" >LogOut</button></li></form>
-                                            <li>
-                                        <button class="text-dark"><a href="/profile"></a></button>
-                                    </li>
+                                        <ul>
+                                            {{#if session.user}}
+                                            <form action="/logout" method="post">
+                                            <li><button type="submit" data-toggle="modal"class="btn btn-dark">Log Out</button></li></form>
+                                            {{else}}
+                                            <li><a href="#signin-modal" data-toggle="modal"><i class="icon-user"></i>Login / Registration</a></li>
+                                            {{/if}}
                                         </ul>
                                     </li>
-                                     
                                 </ul>
-                                 
-                                 
                             </div><!-- End .header-text -->
                         </div><!-- End .header-right -->
                     </div><!-- End .container -->
@@ -478,11 +477,11 @@
         data: { itemID: itemID },
         success: (response) => {
             console.log(response);
-            alert(response);
+           alert(response.message);
         },
         error: () => {
             console.error('Error adding item to wishlist');
-            alert('Error adding item to wishlist');
+            alert(response.message);
         }
     });
 });

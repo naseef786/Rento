@@ -10,15 +10,10 @@ const { Order } = require('../model/order_Schema')
 const fs = require('fs');
 const { remove } = require("lodash");
 
-
-
-
+// admin login sign up functions
 const adminlog = (req, res) => {
   res.render('adminLogin', { layout: '/partials/layout' });
 }
-
-
-
 const adminHome = async (req, res) => {
   const { addCategoryexist, addCategoryerror, addCategory } = req.session
   let data = await Category.find()
@@ -59,7 +54,6 @@ const adminLogin = async (req, res) => {
     res.status(500).send()
   }
 }
-
 const adminSignup = async (req, res, next) => {
   try {
     console.log(req.body);
@@ -78,49 +72,37 @@ const adminSignup = async (req, res, next) => {
   }
 }
 
-
-const adminViewProduct = async (req, res) => {
-  await Products.find().then((items) => {
-    console.log(items);
-    res.render('adminViewProduct', { items, layout: '/partials/layout' })
-  })
-
-}
-
+//manage admin profile
 const UpdateProfile = async (req, res) => {
   try {
-      const id = req.session.admin_id
-      const email = req.body.email
-      const password = req.body.password
+    const id = req.session.admin_id
+    const email = req.body.email
+    const password = req.body.password
 
-      const updateUser = await Admin.findByIdAndUpdate({_id : id }, { $set: { email: email,password:password } })
+    const updateUser = await Admin.findByIdAndUpdate({ _id: id }, { $set: { email: email, password: password } })
 
-      if (updateUser) {
+    if (updateUser) {
 
-          res.redirect("/admin")
-      }
+      res.redirect("/admin")
+    }
 
   } catch (error) {
-      console.log(error.message);
+    console.log(error.message);
   }
 }
 
-
-
-
-
+//manage users
 const adminViewUsers = async (req, res) => {
   await Users.find().then((user) => {
     console.log(user);
     res.render('adminViewUsers', { user, layout: '/partials/layout' })
   })
 }
-const adminManageUsers = async (req,res)=>{
+const adminManageUsers = async (req, res) => {
 
 }
 
-
-
+//manage category
 const addCategory = async (req, res) => {
   try {
     const name = req.body.name;
@@ -148,7 +130,6 @@ const addCategory = async (req, res) => {
     console.log(err);
   }
 }
-
 const adminViewCategory = (req, res) => {
   Category.find().then(categories => {
 
@@ -156,16 +137,13 @@ const adminViewCategory = (req, res) => {
 
   })
 }
-
-
-const editCategory = (req, res) => {
+const editCategory = async(req, res) => {
   let id = req.params.id;
   Category.findById(id).then((category) => {
 
     res.render('adEditCat', { category, layout: '/partials/layout' })
   })
 }
-
 const updateCategory = async (req, res) => {
   let id = req.params.id;
   let new_image = "";
@@ -207,7 +185,14 @@ const deleteCategory = async (req, res) => {
 }
 
 
+//manage product
+const adminViewProduct = async (req, res) => {
+  await Products.find().then((items) => {
+    console.log(items);
+    res.render('adminViewProduct', { items, layout: '/partials/layout' })
+  })
 
+}
 const adminAddProduct = async (req, res) => {
   console.log(req.body);
   let Categories = req.body.category;
@@ -243,7 +228,6 @@ const adminAddProduct = async (req, res) => {
     })
   }
 }
-
 const listProducts = async (req, res) => {
   try {
     let id = req.params.id;
@@ -273,124 +257,65 @@ const updateProduct = async (req, res) => {
   let featured = req.body.isFeatured;
 
   let id = req.params.id;
-  let update = await Products.updateOne({_id:id},{$set:{
-    name: req.body.name,
-    description: req.body.description,
-    richDescription: req.body.richDescription,
-    brand: req.body.brand,
-    image: new_image,
-    price: req.body.price,
-    category: req.body.category,
-    countInStock: req.body.countInStock,
-    rating: req.body.rating,
-    numReviews: req.body.numReviews,
-    isFeatured: Boolean(featured),
-  }})
-  if(update.modifiedCount==0){
-    req.session.product_updateerr=true
-      res.send(msg=true)
-  }
-  else if(update.modifiedCount==1){
-    req.session.product_update=true
-    res.send(msg=true)
-  }
-  }
-
-
-
-
-
-
-let editProductSubmit =async(req,res) =>{
-    
-  try{
-    console.log(req.body)
-  let { name, description, price, color, size, quantity, category,new_image} = req.body
-  // position = JSON.parse(req.body.position)
-  
-  
-  let productId =req.params.id
-   let find=await Products.findOne({_id:ObjectId(productId)})
-    // let {image}=find
-    // let i=0
-    // position.forEach(element => {
-    //   image[element]=imageMulter[i]
-    //   i++
-    // });
-
-  let update =await Products.updateOne({_id:ObjectId(productId)},{$set:
-    {name, description, price, color, size, quantity, category, image
-    }})
-    if(update.modifiedCount==0){
-      req.session.product_updateerr=true
-        res.send(msg=true)
+  let update = await Products.updateOne({ _id: id }, {
+    $set: {
+      name: req.body.name,
+      description: req.body.description,
+      richDescription: req.body.richDescription,
+      brand: req.body.brand,
+      image: new_image,
+      price: req.body.price,
+      category: req.body.category,
+      countInStock: req.body.countInStock,
+      rating: req.body.rating,
+      numReviews: req.body.numReviews,
+      isFeatured: Boolean(featured),
     }
-    else if(update.modifiedCount==1){
-      req.session.product_update=true
-      res.send(msg=true)
-    }
+  })
+  if (update.modifiedCount == 0) {
+    req.session.product_updateerr = true
+    res.redirect("/admin/adminviewproducts");
   }
-  catch(err){
-    err.admin = true;
-      next(err);  
+  else if (update.modifiedCount == 1) {
+    req.session.product_update = true
+    res.redirect("/admin/adminviewproducts");
   }
-  }
-
+}
 const editProduct = (req, res) => {
   let id = req.params.id;
   Products.findById(id).then(product => {
     res.render('adminEditProduct', { product, layout: '/partials/layout' })
   })
 }
-
 const deleteProduct = async (req, res) => {
   let id = req.params.id;
   console.log(id);
-  await Products.findByIdAndRemove(id).then(result => {
-    fs.unlinkSync(`./public/images/uploads/${result.image}`);
-    Category.findByIdAndUpdate(result.category._id, { $pull: { products: { _id: result._id } } })
+
+  try {
+    const result = await Products.findByIdAndRemove(id);
+
+    if (!result) {
+      throw new Error('Product not found');
+    }
+
+    const imagePath = `./public/images/uploads/${result.image}`;
+    if (fs.existsSync(imagePath)) {
+      fs.unlinkSync(imagePath);
+    } else {
+      console.log(`Image not found: ${result.image}`);
+    }
+
+    await Category.findByIdAndUpdate(result.category._id, { $pull: { products: { _id: result._id } } });
+
     res.redirect("/admin/adminviewproducts");
-  });
-}
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+};
 
 
-
-
-
-
-
-//   const addCoupon =  async (req, res) => {
-//     const { code, discount, expiration } = req.body;
-
-//     // Validate the incoming data
-//     if (!code || !discount || !expiration) {
-//       return res.status(400).send('Missing required fields');
-//     }
-
-//     try {
-//       // Create a new coupon object
-//       const coupon = new Coupon({
-//         code,
-//         discount,
-//         expiration: new Date(expiration),
-//       });
-
-//       // Save the coupon to the database
-//       await coupon.save();
-
-//       res.status(201).send('Coupon created successfully');
-//     } catch (err) {
-//       console.error(err);
-//       res.status(500).send('Server error');
-//     }
-//   };
-
-
-
-
-
-
-
+// view wishlisted products and users.
 const adminViewWish = async (req, res) => {
   // retrieve the wishlist array from the userSchema for the current user
   const currentProduct = await Products.findById(req.params.id).populate('wishList');
@@ -409,6 +334,7 @@ const adminViewWish = async (req, res) => {
 };
 
 
+//manage coupons
 const postCreateCoupon = async (req, res, next) => {
   try {
     console.log(req.body)
@@ -416,15 +342,15 @@ const postCreateCoupon = async (req, res, next) => {
     let couponFound = await Coupon.findOne({ couponCode })
     if (!couponFound) {
       let coupn = new Coupon({
-         couponName: couponName,
-         couponCode: couponCode,
-         percentDiscount: percentDiscount,
-         quantity: quantity,
-         startDate: startDate,
-         endDate: endDate,
-         maximumDiscount: maximumDiscount,
-         minimumSpend: minimumSpend,
-        
+        couponName: couponName,
+        couponCode: couponCode,
+        percentDiscount: percentDiscount,
+        quantity: quantity,
+        startDate: startDate,
+        endDate: endDate,
+        maximumDiscount: maximumDiscount,
+        minimumSpend: minimumSpend,
+
       })
       coupn.save().then(data => {
         console.log(data);
@@ -440,42 +366,270 @@ const postCreateCoupon = async (req, res, next) => {
     next(err);
   }
 };
-
-
 const manageCoupons = async (req, res) => {
   await Coupon.find().then(data => {
     console.log(data);
-    res.render('adminViewCoupons', { data, layout:'/partials/layout' })
+    res.render('adminViewCoupons', { data, layout: '/partials/layout' })
   })
 }
-const deleteCoupon = async(req,res)=>{
+const deleteCoupon = async (req, res) => {
   let id = req.params.id
-  await Coupon.findByIdAndRemove(id).then(()=>{
+  await Coupon.findByIdAndRemove(id).then(() => {
     console.log("coupon deleted");
     res.redirect('/admin/managecoupons')
   })
 }
 
-const manageOrder = async (req,res)=>{
-    const orderList = await Order.find()
-    // .populate('userId').sort({'dateOrdered': -1});
-   
-    res.render('adminViewOrders',{orderList,layout: '/partials/layout' })
-}
-const orderDetails = async (req, res) =>{
-  const order = await Order.findById(req.params.id)
-  .populate('user', 'name')
-  .populate({ 
-      path: 'orderItems', populate: {
-          path : 'product', populate: 'category'} 
-      });
 
-  if(!order) {
-      res.status(500).json({success: false})
-  } 
+//manage orders
+
+const manageOrder = async (req, res) => {
+  const orderList = await Order.find()
+  // .populate('userId').sort({'dateOrdered': -1});
+
+  res.render('admin_orderDetails', { orderList, layout: '/partials/layout' })
+}
+const orderDetails = async (req, res) => {
+  const order = await Order.findById(req.params.id)
+    .populate('user', 'name')
+    .populate({
+      path: 'orderItems', populate: {
+        path: 'product', populate: 'category'
+      }
+    });
+
+  if (!order) {
+    res.status(500).json({ success: false })
+  }
   res.send(order);
 }
+const orderList = async function (req, res, next) {
+  try {
+    let { orderreq } = req.query
+    let { userId } = req.session
+    let orderHistory = await Order.find({}).populate("product.productId").sort({ createdAt: -1 })
+    if (!orderreq) {
+      res.render("admin_orders", { orderList: orderHistory })
+    }
+    else {
+      let orderHistory = await Order.findOne({ orderId: orderreq }).populate("product.productId")
+      res.render("admin_orderdetails", { orderList: orderHistory })
+    }
+  }
+  catch (err) {
+    err.admin = true;
+    next(err);
+  }
+}
+let orderAction = async (req, res) => {
 
+  try {
+    let { userId } = req.session
+    let { orderId, action } = req.body
+    orderHistory = await order.findOne({ orderId: orderId })
+    let orderChange = await order.updateOne({ orderId: orderId }, { $set: { orderStatus: action } })
+    if (orderChange.modifiedCount == 0) {
+      res.send({ msg: false })
+    }
+    else if (orderChange.modifiedCount == 1) {
+      if (action == "cancelled" || action == "returned") {
+        for (let i = 0; i < orderHistory.product.length; i++) {
+          let productId = orderHistory.product[i].productId
+          let quantity = orderHistory.product[i].quantity
+          await product.findByIdAndUpdate(productId, { $inc: { quantity: -quantity } })
+        }
+      }
+      res.send({ msg: true, action })
+    }
+
+
+  }
+  catch (err) {
+    err.admin = true;
+    next(err);
+  }
+}
+let paymentAction = async (req, res) => {
+
+  try {
+    let { userId } = req.session
+    let { orderId, action } = req.body
+    orderHistory = await order.findOne({ orderId: orderId })
+    let orderChange = await order.updateOne({ orderId: orderId }, { $set: { paymentStatus: action } })
+    if (orderChange.modifiedCount == 0) {
+      res.send({ msg: false })
+    }
+    else if (orderChange.modifiedCount == 1) {
+      if (action == refund) {
+        await user.updateOne({ _id: userId }, { walletBalance: orderHistory.totalPrice })
+      }
+      res.send({ msg: true, action })
+    }
+
+
+  }
+  catch (err) {
+    err.admin = true;
+    next(err);
+  }
+}
+const salesReport = async (req, res, next) => {
+  try {
+    let saleReport = []
+    let todayDate = new Date();
+    let DaysAgo = new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000);
+    console.log(DaysAgo);
+    saleReport = await order.aggregate([
+      {
+        $match: { createdAt: { $gte: DaysAgo } },
+      },
+      {
+        $group: {
+          _id: { $dateToString: { format: "%d-%m-%Y", date: "$createdAt" } },
+          totalPrice: { $sum: "$totalPrice" },
+          count: { $sum: 1 },
+        },
+      }, {
+        $sort: { _id: 1 }
+      }
+    ])
+    todayDate = moment(todayDate).format('YYYY-MM-DD')
+    DaysAgo = moment(DaysAgo).format('YYYY-MM-DD')
+    res.render('salesreport', { saleReport, todayDate, DaysAgo })
+  }
+  catch (err) {
+    err.admin = true;
+    next(err);
+  }
+}
+
+const salesProject = async (req, res, next) => {
+  try {
+    let start = new Date(req.query.from)
+    let end = new Date(req.query.to)
+    let { filter, orderStatus, donutchart } = req.query
+    let saleReport
+    console.log(req.query.from, req.query.to, filter)
+    if (orderStatus) {
+      saleReport = await Order.aggregate([
+        {
+          $group: {
+            _id: "$orderStatus",
+
+            count: { $sum: 1 },
+          }
+        },
+        , { $sort: { _id: 1 } }
+      ])
+    }
+    else if (donutchart) {
+      saleReport = await order.aggregate([
+        {
+          $group: {
+            _id: "$Payment",
+            count: { $sum: 1 },
+          },
+        }, { $sort: { _id: 1 } }
+      ])
+    }
+    else {
+      saleReport = await Order.aggregate([
+        {
+          $match: {
+            "$and": [
+              { createdAt: { $gte: start, $lte: end } },
+              { orderStatus: "delivered" }
+            ]
+          }
+        },
+        {
+          $group: {
+            _id: { $dateToString: { format: filter, date: "$createdAt" } },
+            totalPrice: { $sum: "$totalPrice" },
+            count: { $sum: 1 },
+          },
+        }, { $sort: { _id: 1 } }
+      ])
+      if (filter == "%m-%Y" || filter == "%m") {
+        const months = [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ];
+        saleReport = saleReport.map((el) => {
+          const newOne = { ...el };
+          console.log(newOne);
+          let id = newOne._id.slice(0, 2)
+          if (id < 10) {
+            id = newOne._id.slice(1, 2)
+          }
+          console.log(id)
+          if (filter == "%m-%Y")
+            newOne._id = months[id - 1] + ' ' + newOne._id.slice(3);
+          else
+            newOne._id = months[id - 1]
+
+          return newOne;
+        })
+      }
+      if (filter == "%U-%Y") {
+        saleReport = saleReport.map((el) => {
+          const newOne = { ...el };
+          newOne._id = "week".concat(" ", newOne._id);
+          return newOne;
+        })
+      }
+    }
+    res.json({ saleReport: saleReport })
+  }
+  catch (err) {
+    err.admin = true;
+    next(err);
+  }
+}
+
+const sales = async (req, res) => {
+  let orders = await Order.find()
+  if (orders) {
+    let totalSales = await Order.aggregate([
+      {
+        $group: {
+          _id: "$orderStatus",
+          totalPrice: { $sum: "$totalPrice" },
+          count: { $sum: 1 },
+        },
+      }, { $sort: { _id: 1 } }
+    ])
+    console.log(totalSales);
+    res.render('sales', { layout: "partials/layout", totalSales })
+  }
+
+}
+
+const orderedUsers = async (req, res) => {
+  let order = await Order.find()
+
+  const user = [];
+  for (let i = 0; i < order.length; i++) {
+    const users = await Users.findById(order[i].userId);
+    user.push(users);
+  }
+  console.log(user);
+  res.render('adminViewUsers', { layout: "partials/layout", user });
+}
+
+const orderUdetails = async (req, res) => {
+  res.render('adminVusers', { layout: "partials/layout", });
+}
 
 const adminLogout = (req, res) => {
   req.session.destroy(err => {
@@ -483,6 +637,8 @@ const adminLogout = (req, res) => {
     res.redirect('/admin/adminlogin')
   })
 }
+
+
 module.exports = {
   adminLogin,
   adminViewProduct,
@@ -508,7 +664,15 @@ module.exports = {
   adminManageUsers,
   manageOrder,
   deleteCoupon,
-  orderDetails
-  
+  orderDetails,
+  salesReport,
+  salesProject,
+  paymentAction,
+  orderAction,
+  orderList,
+  sales,
+  orderUdetails,
+  orderedUsers,
+
 
 }

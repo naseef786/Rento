@@ -93,14 +93,20 @@ const { ObjectId} =require('mongodb')
             type: String,
             default: null
         },
+         discountPrice: {
+            type: String,
+            default: null
+        },
         subTotalPrice: {
             type: Number
         },
         totalPrice: {
             type: Number
-        }
-    }, {
-        timestamps: true
+        },
+        orderId: {
+            type: String,
+            default: null
+    }
     });
     
 

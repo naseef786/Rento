@@ -26,52 +26,62 @@ const {
   adminViewWish,
   manageOrder,
   deleteCoupon,
-  UpdateProfile
-
-  
-  
+  UpdateProfile,
+  sales,
+  orderedUsers,
+  orderUdetails,
   
 } = require("../controller/admin");
+
 const { axios } = require('axios');
 
 
 
 
-
+//admin log routes
 router.get('/',ifAdmin,adminHome)
 router.get('/adminlogin',ifAdminLogout,adminlog)
 router.post('/adminlogin',adminLogin)
 router.post('/adminsignup',adminSignup)
+router.post('/logout',adminLogout)
+
+//update profile
 router.get('/updateprofile',ifAdmin,UpdateProfile)
 
+//manage users
+router.get('/adminviewusers',ifAdmin,adminViewUsers)
+router.get('/orderedUsers',ifAdmin,orderedUsers)
+router.get('/orderedUsers/:id',ifAdmin,orderUdetails)
 
-
-router.get('/admin',ifAdmin,adminViewProduct)
-router.get('/adminviewusers',adminViewUsers)
-
-
-router.get('/adminviewproducts',adminViewProduct)
-router.post('/addproduct',multer.single("image"),adminAddProduct)
+//manage products
+router.get('/adminviewproducts',ifAdmin,adminViewProduct)
+router.get('/viewproductsC/:id',ifAdmin,listProducts)
+router.post('/addproduct',ifAdmin,multer.single("image"),adminAddProduct)
+router.get('/productedit/:id',ifAdmin,editProduct)
 router.post('/updateproduct/:id',multer.single("image"),updateProduct)
-router.get('/delete/:id',deleteProduct)
-router.get('/productedit/:id',editProduct)
+router.get('/delete/:id',ifAdmin,deleteProduct)
 
-// router.delete('/deleteCat/:id',ifAdminAxios,deleteCategory)
+
+//manage category
 router.post('/addcategory',ifAdmin,multer.single("image"),addCategory)
 router.get('/adminviewcategories',ifAdmin,adminViewCategory)
-router.get('/viewproductsC/:id',listProducts)
-router.get("/deleteCat/:id",ifAdminAxios, deleteCategory)
-router.get('/editcat/:id',editCategory)
-router.post('/updatecategory/:id',multer.single("image"),updateCategory)
+router.get("/deleteCat/:id",ifAdmin,ifAdminAxios, deleteCategory)
+router.get('/editcat/:id',ifAdmin,editCategory)
+router.post('/updatecategory/:id',ifAdmin,multer.single("image"),updateCategory)
+// router.delete('/deleteCat/:id',ifAdminAxios,deleteCategory)
 
+//manage coupons
+router.post('/addcoupon',ifAdmin,postCreateCoupon)
+router.get('/managecoupons',ifAdmin,manageCoupons)
+router.get('/deletecoupon/:id',ifAdmin,deleteCoupon)
 
-router.post('/addcoupon',postCreateCoupon)
-router.get('/managecoupons',manageCoupons)
-router.get('/deletecoupon/:id',deleteCoupon)
-
+//view wishlisted products
 router.get('/viewwishlisted/:id',adminViewWish)
 
-router.get('/getorder',manageOrder)
+//manage orders
+router.get('/getorder',ifAdmin,manageOrder)
 
-router.post('/logout',adminLogout)
+//manage sales
+router.get('/sales',ifAdmin,sales)
+
 module.exports = router;

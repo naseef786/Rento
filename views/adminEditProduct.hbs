@@ -1,6 +1,6 @@
 <div class="page-wrapper">
-                  b    {{#with product}}
-								    	<form action="/admin/updateproduct/{{this.id}}" method="put" id="form"   enctype="multipart/form-data" >
+                    {{#with product}}
+								    	<form action="/admin/updateproduct/{{this.id}}" method="post"  enctype="multipart/form-data" >
 			                				<div class="row">
 			                					<div class="col-sm-6">
 			                						<label>Product Name *</label>
@@ -48,7 +48,7 @@
 								    </div><!-- .End .tab-pane -->
 
 
-	<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	{{!-- <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
     <script>
      let form= document.getElementById('form')
@@ -80,4 +80,4 @@ if(response){
      })
      
      
-    </script>
+    </script> --}}

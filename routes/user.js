@@ -12,35 +12,34 @@ const {
       faqPage,
       viewProducts,
       userSignup,
-      postSignin,
+      postSignIn,
       userLogout,
       addToCart,
-      getsearch,
+      getSearch,
       getCategory,
       productDetails,
-      postWishlist,
       wish,
       deleteWishlist,
       cartDelete,
-      placeorder,
+      placeOrder,
       proceedOrder,
       getOrderCount,
       getOrders,
       deleteOrder,
       UpdateProfile,
-      checkoutaddAddress,
       orderSuccess,
       wishlistCount,
-      orderSuccessVerified
+      orderSuccessVerified,
+      getAllCategory,
       
      
 } = require("../controller/user");
 
 //login and sign in
 router.post('/signup',userSignup)
-router.get('/',ifUser,homePage);
+router.post('/login',postSignIn)
 router.get('/login',ifUserLogout,userLogin);
-router.post('/login',postSignin)
+router.get('/',homePage);
 
 //pages
 router.get('/faq',faqPage)
@@ -49,40 +48,42 @@ router.get('/contact',ifUser,contactPage);
 
 
 //search
-router.get('/search',getsearch)
+router.get('/search',getSearch)
 
 //views
 router.get('/productdetails/:id',productDetails)
 router.get('/viewallproducts',viewProducts)
 router.get('/getcategory/:id',getCategory)
-router.get('/profile',profilePage);
-router.post('/updataprofile',UpdateProfile)
+router.get('/getAllCategory',getAllCategory)
+router.get('/profile',ifUser,profilePage);
+router.post('/updataprofile',ifUser,UpdateProfile)
 
 //wishlist
 router.post('/wishlist',ifUser,wishlistCount)
 router.get('/Wishlist',ifUser,wish);
 router.post('/deletewish/:id',ifUser,deleteWishlist)
-// router.patch('/removewish',ifUserAxios,removeWish)
+
 
 
 //cart
 router.post('/addtocart/:id',ifUser,addToCart)
 router.get('/Cart',userCart,ifUser,cartPage);
-router.post('/deletecart/:id',cartDelete)
+router.post('/deletecart/:id',ifUser,cartDelete)
 
 
 //checkout
-router.get('/checkout',userCart,checkoutPage)
-router.post('/checkout',checkoutPage)
-router.get('/proceedOrder',userCart,ifUser,placeorder)
-// router.get('/placeOrder',proceedOrder)
-router.post('/placeOrder',placeorder)
-router.get('/viewOrders',getOrders)
-router.post('/cancelOrder/:id',deleteOrder)
+router.get('/checkout',userCart,ifUser,checkoutPage)
+router.post('/checkout',ifUser,checkoutPage)
+router.get('/proceedOrder',userCart,ifUser,placeOrder)
+router.post('/placeOrder',ifUser,placeOrder)
+router.get('/viewOrders',ifUser,getOrders)
+router.post('/cancelOrder/:id',ifUser,deleteOrder)
+
+
 //logout
 router.post('/logout',userLogout)
-router.post('/success',orderSuccess)
-router.get('/confirmation/:id',orderSuccessVerified)
+router.post('/success',ifUser,orderSuccess)
+router.get('/confirmation/:id',ifUser,orderSuccessVerified)
 
 
 

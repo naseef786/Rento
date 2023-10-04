@@ -13,6 +13,7 @@ const hbs = require("hbs");
 const { urlencoded } = require('body-parser');
 var app = express();
 const handlebars = require('handlebars');
+const {equal,profit}  =require("./hbshelper/helper")
 const { Users } = require('./model/user_Schema');
 
 // view engine setup
@@ -35,6 +36,11 @@ handlebars.registerHelper('equal', function(a, b, options) {
     return options.inverse(this);
   }
 });
+
+const Handlebars = require('handlebars');
+Handlebars.registerHelper('equal', helpers.equal);
+
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -42,6 +48,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'views')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static('public/images/uploads'))
+hbs.registerHelper("equal",equal)
+hbs.registerHelper("profit",profit)
 
 app.use(bodyParser.urlencoded({extended:true}))
 

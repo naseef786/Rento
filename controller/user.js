@@ -15,13 +15,31 @@ var instance = new Razorpay({
     key_secret: 'A5cyQ9fodN27Gwpgx5UlbmX0',
 })
 const crypto = require('crypto');
+const { error } = require("console")
 
 
-const userLogin = (req, res) => {
 
-    res.render("userLogin", { layout: "partials/loginlayout" })
+
+// home page
+const homePage = async (req, res) => {
+    try {
+        let item = await Products.find().sort({ dateCreated: -1 })
+        let items = await Products.find()
+        let categories = await Category.find()
+        let user = await Users.findById(req.session.user_id)
+        req.session.user = user
+        console.log(req.session);
+        res.render("userHome", { items, item, user, categories: categories, layout: "partials/mainlayout" })
+    }
+    catch {
+        res.status(500).send()
+    }
 }
 
+// user login and signup
+const userLogin = (req, res) => {
+    res.render("userLogin", { layout: "partials/loginlayout" })
+}
 const userSignup = async (req, res, next) => {
     try {
         console.log(req.body);
@@ -40,8 +58,7 @@ const userSignup = async (req, res, next) => {
         next(err);
     }
 }
-
-const postSignin = async (req, res) => {
+const postSignIn = async (req, res) => {
     try {
         console.log(req.body);
         let Email = req.body.email;
@@ -72,30 +89,9 @@ const postSignin = async (req, res) => {
         res.status(500).send()
     }
 }
-const homePage = async (req, res) => {
-    try {
 
 
-
-        let item = await Products.find().sort({ dateCreated: -1 })
-        let items = await Products.find()
-        let categories = await Category.find()
-        let user = await Users.findById(req.session.user_id)
-        req.session.user = user
-        console.log(req.session);
-        res.render("userHome", { items, item, user, categories: categories, layout: "partials/mainlayout" })
-
-
-    }
-
-
-
-
-    catch {
-        res.status(500).send()
-    }
-}
-
+//products
 const productDetails = async (req, res) => {
     try {
         console.log(req.params);
@@ -106,72 +102,13 @@ const productDetails = async (req, res) => {
         console.log(err);
     }
 }
-
-const getCategory = async (req, res) => {
-
-    try {
-
-        let id = req.params.id;
-
-        console.log(id);
-        const items = await Products.find({ category: id })
-        const category = await Category.findById(id)
-        console.log(items)
-        res.render("viewProducts", { items, layout: '/partials/mainlayout', category });
-
-    }
-    catch (err) {
-        console.log(err);
-    }
-}
-
-const contactPage = (req, res) => {
-    res.render("contact", { layout: "partials/mainlayout" })
-}
-const aboutPage = (req, res) => {
-    res.render("about", { layout: "partials/mainlayout" })
-}
-
-const profilePage = async (req, res) => {
-    const user_id = req.session.user_id;
-    try {
-        await Users.findById(user_id).then(data => {
-            res.render("userProfile", { data, layout: "partials/mainlayout" })
-        })
-    }
-    catch (err) {
-        console.log(err);
-    }
-
-}
-
-const UpdateProfile = async (req, res) => {
-    try {
-        const Id = req.session.user_id
-        const name = req.body.name
-        const email = req.body.email
-        const mobile = req.body.mobile
-        const password = req.body.password
-
-        const updateUser = await Users.findByIdAndUpdate({ _id: Id }, { $set: { name: name, email: email, mobile: mobile, password: password } })
-
-        if (updateUser) {
-
-            res.redirect("/profile")
-        }
-
-    } catch (error) {
-        console.log(error.message);
-    }
-}
-
-let getsearch = async (req, res) => {
+let getSearch = async (req, res) => {
     const query = req.query.name;
     console.log(query);
 
     let regExp = new RegExp(`${query}`, 'i')
     let product = await Products.findOne({ name: { $regex: regExp } });
-    
+
     if (product) {
         await Products.findOne({ name: { $regex: regExp } })
             .then(cat => {
@@ -196,7 +133,85 @@ let getsearch = async (req, res) => {
 
 
 }
+const viewProducts = async (req, res) => {
+    await Products.find().then(data => {
+        res.render("wholeProducts", { layout: "partials/mainlayout", data })
+    })
+}
 
+
+//category
+const getCategory = async (req, res) => {
+
+    try {
+
+        let id = req.params.id;
+
+        console.log(id);
+        const items = await Products.find({ category: id })
+        const category = await Category.findById(id)
+        console.log(items)
+        res.render("viewProducts", { items, layout: '/partials/mainlayout', category });
+
+    }
+    catch (err) {
+        console.log(err);
+    }
+}
+const getAllCategory = async (req, res) => {
+    try {
+        const category = await Category.find()
+        res.render("viewCategory", { layout: '/partials/mainlayout', category });
+    } catch (error) {
+        console.log(error);
+    }
+}
+//other pages
+const contactPage = (req, res) => {
+    res.render("contact", { layout: "partials/mainlayout" })
+}
+const aboutPage = (req, res) => {
+    res.render("about", { layout: "partials/mainlayout" })
+}
+const faqPage = (req, res) => {
+    res.render("faq", { layout: "partials/mainlayout" })
+}
+
+//manage profile
+const profilePage = async (req, res) => {
+    const user_id = req.session.user_id;
+    try {
+        await Users.findById(user_id).then(data => {
+            res.render("userProfile", { data, layout: "partials/mainlayout" })
+        })
+    }
+    catch (err) {
+        console.log(err);
+    }
+
+}
+const UpdateProfile = async (req, res) => {
+    try {
+        const Id = req.session.user_id
+        const name = req.body.name
+        const email = req.body.email
+        const mobile = req.body.mobile
+        const password = req.body.password
+
+        const updateUser = await Users.findByIdAndUpdate({ _id: Id }, { $set: { name: name, email: email, mobile: mobile, password: password } })
+
+        if (updateUser) {
+
+            res.redirect("/profile")
+        }
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
+//manage cart
 const cartPage = async (req, res) => {
     // retrieve the caart array from the userSchema for the current user
     const currentUser = await Users.findById(req.session.user_id).populate('cart');
@@ -213,7 +228,6 @@ const cartPage = async (req, res) => {
     // pass the array of product details to the wishlist.hbs page
     res.render("userCart", { layout: "partials/mainlayout", Cart, coupdata, cartProducts })
 };
-
 const addToCart = async (req, res) => {
     const productId = req.params.id;
 
@@ -286,7 +300,6 @@ const addToCart = async (req, res) => {
     catch (err) { console.log(err); }
 
 }
-
 const cartUpdate = async (req, res, next) => {
     try {
         let userId = req.session.user_id
@@ -312,7 +325,6 @@ const cartUpdate = async (req, res, next) => {
         next(error)
     }
 }
-
 const cartDelete = (req, res, next) => {
     try {
         let userId = req.session.user_id
@@ -325,20 +337,7 @@ const cartDelete = (req, res, next) => {
     }
 }
 
-const faqPage = (req, res) => {
-    res.render("faq", { layout: "partials/mainlayout" })
-}
-
-const viewProducts = async (req, res) => {
-    await Products.find().then(data => {
-        res.render("wholeProducts", { layout: "partials/mainlayout", data })
-    })
-
-}
-
-
-
-
+// manage wishlist
 const wishlistCount = async (req, res) => {
     console.log(req.body);
     const itemID = req.body.itemID;
@@ -352,7 +351,7 @@ const wishlistCount = async (req, res) => {
     const index = user.wishList.indexOf(itemID);
     const wish = product.wishList.indexOf(userID);
     if (index === -1 || wish === -1) {
-       
+
         user.wishList.push(itemID);
         product.wishList.push(userID);
         await user.save();
@@ -360,17 +359,13 @@ const wishlistCount = async (req, res) => {
         res.status(200).send({ message: 'Product added to wishlist.' });
     } else {
         user.wishList.splice(index, 1);
-        product.wishList.splice(wish,1)
+        product.wishList.splice(wish, 1)
         await user.save();
         await product.save();
         res.status(200).send({ message: 'Product removed from wishlist.' });
     }
-   
+
 }
-    ;
-
-
-
 const deleteWishlist = async (req, res, next) => {
     try {
         let userId = req.session.user_id
@@ -386,9 +381,6 @@ const deleteWishlist = async (req, res, next) => {
         next(error)
     }
 }
-
-
-// route handler for the wishlist page
 const wish = async (req, res) => {
     // retrieve the wishlist array from the userSchema for the current user
     const currentUser = await Users.findById(req.session.user_id).populate('wishList');
@@ -408,16 +400,35 @@ const wish = async (req, res) => {
 
 
 
-const userLogout = (req, res) => {
-    req.session.destroy(err => {
-        if (err) throw err;
-        res.redirect('/login')
-    })
+//check out functions
+const checkoutPage = async (req, res) => {
+    let coupon = req.body.couponcode;
+    let totalPrice = req.body.totalPrice;
+    let user_id = req.session.user_id
+
+
+    let couponData = await Coupon.findOne({ couponCode: coupon })
+    if (couponData) {
+
+        const user = await Users.findOne({ _id: user_id })
+        const address = user.address[0];
+        const grandTotal = (couponData.percentDiscount * totalPrice) / 100;
+        await Coupon.find().then(coupons => {
+            res.render("userCheckout", { layout: "partials/mainlayout", couponData, grandTotal, cartDetails: user.cart, coupons, totalPrice, address })
+        })
+    }
+    else {
+        const user = await Users.findOne({ _id: user_id })
+        const address = user.address[0];
+        const grandTotal = totalPrice
+        await Coupon.find().then(coupons => {
+            res.render("userCheckout", { layout: "partials/mainlayout", couponData, grandTotal, cartDetails: user.cart, coupons, totalPrice, address })
+        })
+    }
+
 }
+const placeOrder = async (req, res) => {
 
-const placeorder = async (req, res) => {
-
-    console.log(req.body);
     let user_id = req.session.user_id
     const delivery = {
         city: req.body.city,
@@ -437,203 +448,182 @@ const placeorder = async (req, res) => {
         Address: req.body.address,
     }
     try {
-        let userad = await Users.findById(user_id)
-        userad.address.push(AddressObj)
+        let userad = await Users.findByIdAndUpdate(user_id, { $set: { "address": AddressObj } })
         userad.save().then(data => console.log(data))
         let coupon = req.body.couponcode;
         const randomstring = uuidv4().slice(0, 5);
-        console.log(randomstring, "random string");
 
         let coup = await Coupon.findOneAndUpdate({ coupenCode: coupon })
-        coup.users.push(user_id)
-        coup.quantity--
-        coup.save();
+        if (coup) {
+            coup.users.push(user_id)
+            coup.quantity--
+            coup.save();
+        }
         const user = await Users.findOne({ _id: user_id })
         let Cart = user.cart
         let items = []
         items.push(Cart)
-        console.log(items);
-    
         const totalPrice = user.cart.reduce((total, item) => {
             return total + item.total
         }, 0);
-        const grandTotal = (coup.percentDiscount * totalPrice) / 100
-        const discount = totalPrice - grandTotal;
 
-        
+        // Calculate the total amount with discount
+        let grandTotal = totalPrice;
+        if (coup) {
+            const discountAmount = totalPrice * coup.percentDiscount / 100;
+            grandTotal -= discountAmount;
+        }
+
+
+
+
         let order = new Order({
             products: items,
             Address: AddressObj,
             status: req.body.status,
             userId: user_id,
             deliveryAddress: delivery,
-            couponCode: coup.couponCode,
+            couponCode: coup ? coup.couponCode : null,
             payment: req.body.payment,
             subTotalPrice: totalPrice,
-            discountPrice: discount,
+            discountPrice: coup ? coup.percentDiscount : null,
             totalPrice: grandTotal,
-
+            orderId: randomstring
         })
         order = order.save().then(async (data) => {
             const orderId = data._id.toString()
             console.log(orderId);
             req.session.orderdata = data;
-            if (data.payment == 'COD') {
-                await Users.updateOne({ _id: user_id }, { $set: { cart: [] } })
-                console.log(data);
-                // res.json({ status: true })
-                res.render('orderSucccess', {
-                    data,
-                    layout: "partials/mainlayout"
-                })
-            }
-            else {
-             
-                let amount = totalPrice
-                req.session.amount = totalPrice*100
-                const response = await instance.orders.create({
-                    amount: amount * 100,
-                    currency: "INR",
-                    receipt: orderId,
+            try {
+                if (data.payment == 'COD') {
+                    await Users.updateOne({ _id: user_id }, { $set: { cart: [] } })
+                    console.log(data);
+                    await Products.findOne().then(async productsIn => {
+                        for (let i = 0; i < user.cart.length; i++) {
+                            for (let j = 0; j < productsIn.length; j++) {
+                                if (user.cart[i].product == productsIn[j]._id) {
+                                    const currentCount = productsIn[j].countInStock - user.cart[i].quantity
+                                    console.log(currentCount, "llllllllllllllllll");
+                                    await Products.findOneAndUpdate({ _id: productsIn[j]._id }, { $set: { countInStock: currentCount } })
+                                }
+                            }
+                        }
+                    }).catch(err => {
+                        console.log(err);
+                        res.redirect('/')
+                    })
+                    // res.json({ status: true })
+                    res.render('orderSucccess', {
+                        data,
+                        layout: "partials/mainlayout"
+                    })
+                }
+                else {
+                    let amount = grandTotal
+                    req.session.amount = totalPrice * 100
+                    const response = await instance.orders.create({
+                        amount: amount * 100,
+                        currency: "INR",
+                        receipt: orderId,
 
-                })
-                console.log(response);
-                res.render('checkoutform', {
-                    key_id: instance.key_id,
-                    orderId: response.id,
-                    amount: amount,
-                    name: user.name,
-                    email: user.email,
-                    contactNumber: user.mobile,
-                    response: response,
-                    layout: "partials/mainlayout"
-                });
+                    })
+                    console.log(response);
+                    res.render('checkoutform', {
+                        key_id: instance.key_id,
+                        orderId: response.id,
+                        amount: amount,
+                        name: user.name,
+                        email: user.email,
+                        contactNumber: user.mobile,
+                        response: response,
+                        layout: "partials/mainlayout"
+                    });
+                }
+            } catch (err) {
+                console.log(err);
             }
         })
     } catch (error) {
         console.log(error);
         res.status(500).send(error);
     }
-
-
 }
-
-
-let orderSuccess = async (req, res,next) => {
-    console.log(req.body,);
-    const amount = req.session.amount;
+let orderSuccess = async (req, res, next) => {
     const order_id = req.body.order_id;
     const payment_id = req.body.payment_id;
     const signature = req.body.signature;
-    let user_id = req.body.user_id;
- 
     try {
-const message = order_id + '|' + payment_id;
-const generated_signature = crypto.createHmac('sha256', instance.key_secret)
-    .update(message)
-    .digest('hex');
-if (generated_signature === signature) {
-    console.log(req.session);
-    const orderid = req.session.orderdata._id
-   let order = await Order.findOneAndUpdate({ _id: orderid }, {
-        $set: {
-            paymentStatus: "Completed",
-        },
-    })
-    order.save();
-    let user = await Users.findOneAndUpdate({_id:user_id})
-       
-        await Products.find().then(async productsIn => {
-          
-        for (let i = 0; i < user.cart.length; i++) {
-            for (let j = 0; j < productsIn.length; j++) {
-                if (user.cart[i].product == productsIn[j]._id) {
-                    const pdtq = productsIn[j].countInStock - user.cart[i].quantity
-                    console.log(pdtq);
-                      await  Products.findOneAndUpdate({ _id: productsIn[j]._id }, { $set: { countInStock: pdtq } })
-                  
-                }
-               
+        const message = order_id + '|' + payment_id;
+        const generated_signature = crypto.createHmac('sha256', instance.key_secret)
+            .update(message)
+            .digest('hex');
+        if (generated_signature === signature) {
+            const orderid = req.session.orderdata._id
+            let object = {
+                orderId: order_id,
+                paymentId: payment_id
             }
+            let order = await Order.findOneAndUpdate({ _id: orderid }, {
+                $set: {
+                    paymentStatus: "Completed",
+                    razorPayDetails: object
+                },
+            })
+            await order.save();
+            const userId = req.session.user_id
+            let user = await Users.findByIdAndUpdate(userId).then(async user => {
+                await Products.find().then(async (productsIn) => {
+                    for (let i = 0; i < user.cart.length; i++) {
+                        for (let j = 0; j < productsIn.length; j++) {
+                            if (user.cart[i].product == productsIn[j]._id) {
+                                const currentCount = productsIn[j].countInStock - user.cart[i].quantity
+                                console.log(currentCount, "llllllllllllllllll");
+                                await Products.findOneAndUpdate({ _id: productsIn[j]._id }, { $set: { countInStock: currentCount } })
+                            }
+                        }
+                    }
+                }).catch(err => {
+                    console.log(err);
+                    res.redirect('/')
+                })
+                user.set({ cart: [] })
+                user.orders.push(order._id)
+                user.save()
+            })
+            res.json({
+                payment: true,
+                orderid: req.session.orderdata._id,
+            })
+        } else {
+            res.json({
+                payment: false,
+                orderid: req.session.orderid
+            })
         }
-    })
-    
-           user.set({cart:[]})
-           user.orders.push(order._id) 
-           user.save()
-        
-    res.json({
-        payment: true,
-        orderid: req.session.orderdata._id,
-    })
-} else {
-    res.json({
-        payment: false,
-        orderid: req.session.orderid
-    })
+    } catch (error) {
+        console.log(error.message)
+        next(error)
+    }
 }
-} catch (error) {
-console.log(error.message)
-next(error)
-}
-}
-
-
-
-
-
-
-
-
-
 const orderSuccessVerified = async (req, res) => {
     let id = req.params.id
     let order = await Order.findById(id).populate('products.Object').exec()
-    console.log(order);
-
-    console.log(order);
-    // const orderedProducts = order.products;
-    // const products = order.products.map((product) => {
-    //     return {
-    //       name: product.productName,
-    //     };
-    //   });
-  
-     res.render('orderSucccess', {
-         order,
-         layout: "partials/mainlayout"
-     })
- 
- }
- 
-
-
-
-
-const checkoutPage = async (req, res) => {
-    let coupon = req.body.couponcode;
-    let totalPrice = req.body.totalPrice;
-    let user_id = req.session.user_id
-
-
-    let couponData = await Coupon.findOne({ couponCode: coupon })
-    const user = await Users.findOne({ _id: user_id })
-    const address = user.address[0];
-    const grandTotal = (couponData.percentDiscount * totalPrice) / 100;
-    await Coupon.find().then(coupons => {
-        res.render("userCheckout", { layout: "partials/mainlayout", couponData, grandTotal, cartDetails: user.cart, coupons, totalPrice, address })
+    res.render('orderSucccess', {
+        order,
+        layout: "partials/mainlayout"
     })
 
 }
 
-
+//manage orders
 const deleteOrder = async (req, res) => {
-    Order.findByIdAndRemove(req.params.id).then(async order => {
+    Order.findByIdAndUpdate(req.params.id).then(async order => {
         if (order) {
-          
-                await Order.findByIdAndRemove(req.params.id)
-        
-            res.redirect('/getOrder')
+
+            order.set({ orderStatus: "cancelled" })
+            order.save();
+            console.log(order);
+            res.redirect('/')
             // return res.status(200).json({ success: true, message: 'the order is deleted!' })
         } else {
             return res.status(404).json({ success: false, message: "order not found!" })
@@ -652,58 +642,33 @@ const getOrderCount = async (req, res) => {
         orderCount: orderCount
     });
 }
-
 const getOrders = async (req, res) => {
     let userId = req.session.user_id
-    let user = await Users.findOne({_id:userId})
-   
-    let order = await Order.findById(user.orders).populate('products.Object').exec()
-    console.log(order);
-  
-    res.render("orderPage",{ layout: "partials/mainlayout" , order,user:user});
+    let user = await Users.findOne({ _id: userId }, { orderStatus: 'cancelled' })
+    const currentUser = await Users.findById(req.session.user_id)
+    const orders = currentUser.orders;
+
+    // fetch the product details for each product id in the wishlist array
+    const allOrders = [];
+    for (let i = 0; i < orders.length; i++) {
+        const order = await Order.findById(orders[i]).exec();
+        allOrders.push(order);
+    }
+    console.log(allOrders);
+
+
+
+    res.render("orderPage", { layout: "partials/mainlayout", allOrders, user: user });
 }
 
 
-
-
-const checkoutaddAddress = async (req, res) => {
-    try {
-
-        console.log("inside checkout address");
-        if (req.session.user_id) {
-            Id = req.session.user_id;
-            console.log(Id, "idd");
-            const AddressObj = {
-                city: req.body.city,
-                county: req.body.country,
-                phone: req.body.phone,
-                state: req.body.state,
-                firstname: req.body.firstname,
-                lastname: req.body.lastname,
-                pincode: req.body.pincode,
-                Address: req.body.address
-            }
-            const userAddress = await Users.findOneAndUpdate({ userId: Id })
-            userAddress.address.push(AddressObj)
-            await userAddress.save().then(() => {
-                res.redirect('/checkout')
-            })
-        }
-
-    }
-    catch (error) {
-        console.log(error.message);
-    }
+// user logout
+const userLogout = (req, res) => {
+    req.session.destroy(err => {
+        if (err) throw err;
+        res.redirect('/')
+    })
 }
-
-
-
-
-
-
-
-
-
 
 
 module.exports = {
@@ -713,33 +678,27 @@ module.exports = {
     homePage,
     profilePage,
     UpdateProfile,
-    // wishlistPage,
     wishlistCount,
     cartPage,
     checkoutPage,
     faqPage,
     viewProducts,
     userSignup,
-    postSignin,
+    postSignIn,
     userLogout,
     addToCart,
-    getsearch,
+    getSearch,
     getCategory,
     productDetails,
     deleteWishlist,
     wish,
     cartDelete,
     cartUpdate,
-    placeorder,
+    placeOrder,
     getOrderCount,
     getOrders,
     deleteOrder,
-    checkoutaddAddress,
     orderSuccess,
-    orderSuccessVerified
-
-
-
-
-
+    orderSuccessVerified,
+    getAllCategory,
 }
