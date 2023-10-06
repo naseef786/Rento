@@ -9,6 +9,7 @@ const { Coupon } = require('../model/coupon_Schema');
 const { Order } = require('../model/order_Schema')
 const fs = require('fs');
 const { remove } = require("lodash");
+const { log } = require("console");
 
 // admin login sign up functions
 const adminlog = (req, res) => {
@@ -19,10 +20,8 @@ const adminHome = async (req, res) => {
   let data = await Category.find()
   let items = await Products.find()
 
-  res.render("adminHome", { data, items, layout: '/partials/layout', msg_exist: addCategoryexist, msg_error: addCategoryerror, msg_add: addCategory });
-  req.session.addCategoryerror = false
-  req.session.addCategoryexist = false
-  req.session.addCategory = false
+  res.render("adminHome", { data, items, layout: '/partials/layout'});
+  
 
 
 
@@ -386,69 +385,108 @@ const deleteCoupon = async (req, res) => {
 const manageOrder = async (req, res) => {
   const orderList = await Order.find()
   // .populate('userId').sort({'dateOrdered': -1});
-
-  res.render('admin_orderDetails', { orderList, layout: '/partials/layout' })
+console.log(orderList);
+  res.render('adminViewOrders', { orderList, layout: '/partials/layout',orderList})
 }
-const orderDetails = async (req, res) => {
-  const order = await Order.findById(req.params.id)
-    .populate('user', 'name')
-    .populate({
-      path: 'orderItems', populate: {
-        path: 'product', populate: 'category'
-      }
-    });
 
-  if (!order) {
-    res.status(500).json({ success: false })
-  }
-  res.send(order);
-}
-const orderList = async function (req, res, next) {
+// const orderDetails = async (req, res) => {
+//   const order = await Order.findById(req.params.id)
+//     .populate('user', 'name')
+//     .populate({
+//       path: 'orderItems', populate: {
+//         path: 'product', populate: 'category'
+//       }
+//     });
+
+//   if (!order) {
+//     res.status(500).json({ success: false })
+//   }
+//   res.send(order);
+// }
+// const orderList = async function (req, res, next) {
+//   try {
+//     let { orderreq } = req.query
+//     let { userId } = req.session
+//     let orderHistory = await Order.find({}).populate("product.productId").sort({ createdAt: -1 })
+//     if (!orderreq) {
+//       res.render("admin_orders", { orderList: orderHistory })
+//     }
+//     else {
+//       let orderHistory = await Order.findOne({ orderId: orderreq }).populate("product.productId")
+//       res.render("admin_orderdetails", { orderList: orderHistory })
+//     }
+//   }
+//   catch (err) {
+//     err.admin = true;
+//     next(err);
+//   }
+// }
+
+
+const orderAction = async (req, res) => {
   try {
-    let { orderreq } = req.query
-    let { userId } = req.session
-    let orderHistory = await Order.find({}).populate("product.productId").sort({ createdAt: -1 })
-    if (!orderreq) {
-      res.render("admin_orders", { orderList: orderHistory })
-    }
-    else {
-      let orderHistory = await Order.findOne({ orderId: orderreq }).populate("product.productId")
-      res.render("admin_orderdetails", { orderList: orderHistory })
-    }
-  }
-  catch (err) {
-    err.admin = true;
-    next(err);
-  }
-}
-let orderAction = async (req, res) => {
+    const { orderId } = req.params;
+    const { newOrderStatus } = req.body;
+    const { userId } = req.session;
 
-  try {
-    let { userId } = req.session
-    let { orderId, action } = req.body
-    orderHistory = await order.findOne({ orderId: orderId })
-    let orderChange = await order.updateOne({ orderId: orderId }, { $set: { orderStatus: action } })
-    if (orderChange.modifiedCount == 0) {
-      res.send({ msg: false })
+    console.log(req.params);
+    console.log(req.body);
+    console.log(newOrderStatus);
+
+    const orderHistory = await Order.findOne({ orderId: orderId });
+    console.log(orderHistory);
+    const orderChange = await Order.updateOne({orderId:orderId}, { $set: { orderStatus: newOrderStatus } });
+
+    if (orderChange.modifiedCount === 0) {
+      return res.send({ msg: false });
     }
-    else if (orderChange.modifiedCount == 1) {
-      if (action == "cancelled" || action == "returned") {
-        for (let i = 0; i < orderHistory.product.length; i++) {
-          let productId = orderHistory.product[i].productId
-          let quantity = orderHistory.product[i].quantity
-          await product.findByIdAndUpdate(productId, { $inc: { quantity: -quantity } })
-        }
+
+    if (newOrderStatus === "cancelled" || newOrderStatus === "returned") {
+      for (const product of orderHistory.products) {
+        const { productId, quantity } = product;
+        await Products.findByIdAndUpdate(productId, { $inc: { quantity: -quantity } });
       }
-      res.send({ msg: true, action })
     }
 
+    res.send({ msg: true, newOrderStatus }); // Assuming 'action' is defined somewhere in your code.
 
+  } catch (err) {
+    console.log(err);
+    res.status(500).send({ error: "Internal Server Error" });
   }
-  catch (err) {
-    err.admin = true;
-    next(err);
+};
+const deleteOrder =  async (req, res) => {
+  try {
+    console.log(req.params);
+    const orderId = req.params.orderId;
+
+    // Find the order by ID and delete it
+    const deletedOrder = await Order.findOneAndDelete({orderId:orderId});
+
+    if (!deletedOrder) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    res.redirect('/admin')
+  } catch (error) {
+    res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
+};
+
+
+const getChart = async (req, res) => {
+  try {
+    console.log("hello");
+    const orders = await Order.find();
+    const totalSales = orders.reduce((acc, order) => acc + order.totalPrice, 0);
+    res.render('chart',{ totalSales:totalSales });
+  } catch (error) {
+    res.status(500).json({ message: 'Internal server error', error: error.message });
   }
 }
+
+
+
 let paymentAction = async (req, res) => {
 
   try {
@@ -664,15 +702,16 @@ module.exports = {
   adminManageUsers,
   manageOrder,
   deleteCoupon,
-  orderDetails,
   salesReport,
   salesProject,
   paymentAction,
   orderAction,
-  orderList,
+  getChart,
   sales,
   orderUdetails,
   orderedUsers,
+  deleteOrder
+  
 
 
 }

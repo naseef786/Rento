@@ -23,6 +23,7 @@
 					<div class="row">
 
 						<div class="col-lg-9">
+							{{#if Cart}}
 							<table class="table table-cart table-mobile">
 								<thead>
 									<tr>
@@ -38,7 +39,7 @@
 								</thead>
 
 								<tbody>
-									{{#if Cart}}
+									
 									{{#each Cart }}
 
 									<div>
@@ -75,18 +76,21 @@
 										</tr>
 									</div>
 
-									{{/each}}
+									
 
-									{{else}}
-									<h2>no products added to cart</h2>
-									{{/if}}
+									
 								</tbody>
+								{{/each}}
+								{{else}}
+									<h2>please add some products to your cart . . .</h2>
+									{{/if}}
 							</table><!-- End .table table-wishlist -->
 						</div>
+						{{#if cartProducts}}
 						<aside class="col-lg-3">
 							<div class="summary summary-cart">
 								<h3 class="summary-title">Proceed To Order</h3><!-- End .summary-title -->
-
+                   
 								<table class="table table-summary">
 									<tbody>{{#each cartProducts}}
 										<tr class="summary-subtotal">
@@ -148,6 +152,7 @@
 							<button type="submit">	<a class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO
 									CHECKOUT</a></button>
 									</form>
+						{{/if}}
 							</div><!-- End .summary -->
 
 							<a href="/viewproducts" class="btn btn-outline-dark-2 btn-block mb-3"><span>CONTINUE

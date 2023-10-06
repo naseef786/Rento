@@ -1,0 +1,36 @@
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <canvas id="salesChart" width="400" height="400"></canvas>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const salesChartCanvas = document.getElementById('salesChart').getContext('2d');
+    const totalSales = {{ totalSales }};
+
+    // Create a Chart
+    new Chart(salesChartCanvas, {
+      type: 'bar',
+      data: {
+        labels: ['Total Sales'],
+        datasets: [
+          {
+            label: 'Total Sales',
+            data: [totalSales],
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+          },
+        },
+      },
+    });
+  });
+</script>

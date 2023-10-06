@@ -1,96 +1,77 @@
 <link rel="stylesheet" href="   https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></script>
-    <script src="/../Rento/public/javascripts/wish.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></script>
+<script src="/../Rento/public/javascripts/wish.js"></script>
 
 <div class="page-wrapper">
-  <main>
+    <main>
 
- <div class="container">
+        <div class="container">
 
-     
-           
-         
-                    <div class="table table-wishlist table-mobile">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th class="text-center">
-                                        <div class="toggle-btn">
-                                            <div class="inner-circle"></div>
-                                        </div>
-                                    </th>
-                                    <th>Order #</th>
-                                    <th>Company name</th>
-                                    <th>status</th>
-                                    <th>Total</th>
-                                    <th>Created</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody class="table-body">
-                                <tr class="cell-1">
-                                    <td class="text-center">
-                                        <div class="toggle-btn">
-                                            <div class="inner-circle"></div>
-                                        </div>
-                                    </td>
-                                    <td>#SO-13487</td>
-                                    <td>Gasper Antunes</td>
-                                    <td><span class="badge badge-success">Fullfilled</span></td>
-                                    <td>$2674.00</td>
-                                    <td>Today</td>
-                                    <td><i class="fa fa-ellipsis-h text-black-50"></i></td>
-                                </tr>
-                                <tr class="cell-1">
-                                    <td class="text-center">
-                                        <div class="toggle-btn">
-                                            <div class="inner-circle"></div>
-                                        </div>
-                                    </td>
-                                    <td>#SO-13453</td>
-                                    <td>Aartsen van</td>
-                                    <td><span class="badge badge-info">Confirmed</span></td>
-                                    <td>$3454.00</td>
-                                    <td>Yesterday</td>
-                                    <td><i class="fa fa-ellipsis-h text-black-50"></i></td>
-                                </tr>
-                                <tr class="cell-1">
-                                    <td class="text-center">
-                                        <div class="toggle-btn">
-                                            <div class="inner-circle"></div>
-                                        </div>
-                                    </td>
-                                    <td>#SO-13498</td>
-                                    <td>Trashes Habard</td>
-                                    <td><span class="badge badge-danger">Partially shipped</span></td>
-                                    <td>$6274.00</td>
-                                    <td>May 12,2020</td>
-                                    <td><i class="fa fa-ellipsis-h text-black-50"></i></td>
-                                </tr>
-                                <tr class="cell-1">
-                                    <td class="text-center">
-                                        <div class="toggle-btn">
-                                            <div class="inner-circle"></div>
-                                        </div>
-                                    </td>
-                                    <td>#SO-16499</td>
-                                    <td>Samban Hubart</td>
-                                    <td><span class="badge badge-success">Fullfilled</span></td>
-                                    <td>$6375.00</td>
-                                    <td>May 11,2020</td>
-                                    <td><i class="fa fa-ellipsis-h text-black-50"></i></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                
-           
-        
+
+
+
+
+            <div class="table table-wishlist table-mobile">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="text-center">
+                                <div class="toggle-btn">
+                                    <div class="inner-circle"></div>
+                                </div>
+                            </th>
+                            <th>Order #</th>
+                            <th>Costomer name</th>
+                            <th>order status</th>
+                            <th>Total</th>
+                            <th>Created</th>
+                            <th>Edit Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-body">
+                        {{#each orderList }}
+
+                        <tr class="cell-1">
+                            <td class="text-center">
+                                <div class="toggle-btn">
+                                    <div class="inner-circle"></div>
+                                </div>
+                            </td>
+                            <td>{{this.orderId}}</td>
+                            <td>{{this.userId}}</td>
+                            <td><span class="badge badge-success"> {{this.orderStatus}}</span></td>
+                            <td>{{this.totalPrice}}</td>
+                            <td>{{this.orderDate}}</td>
+                            <td>
+                                  <form action="/admin/update-order-status/{{this.orderId}}" method="POST">
+                                <select name="newOrderStatus">
+                                    <option value="{{this.orderStatus}}">{{this.orderStatus}}</option>
+                                    <option value="Delivered">Delivered</option>
+                                    <option value="Delivery Postponed">Delivery Postponed</option>
+                                    <option value="cancelled">order cancelled</option>
+                                    <option value="returned">Product returned</option>
+
+                                </select>
+                                <button type="submit">Update</button>
+                            </form>
+                            </td>
+                          <td class="remove-col"> <a href="/admin/deleteOrder/{{this.orderId}}" class="text-danger"><i class="fas fa-trash fa-lg mx-1"></i></a></td>
+						
+                        </tr>
+                        {{/each}}
+
+                    </tbody>
+                </table>
+            </div>
+
+
+
+
+
+
+        </div>
+    </main>
 
 </div>
-</main>
-
-    </div>
- 

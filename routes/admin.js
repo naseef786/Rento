@@ -30,10 +30,14 @@ const {
   sales,
   orderedUsers,
   orderUdetails,
+  orderAction,
+  deleteOrder, 
+  getChart
   
 } = require("../controller/admin");
 
 const { axios } = require('axios');
+
 
 
 
@@ -80,8 +84,10 @@ router.get('/viewwishlisted/:id',adminViewWish)
 
 //manage orders
 router.get('/getorder',ifAdmin,manageOrder)
-
+router.post('/update-order-status/:orderId',orderAction)
+router.get('/deleteOrder/:orderId',deleteOrder)
 //manage sales
+router.get('/total-sales',getChart)
 router.get('/sales',ifAdmin,sales)
 
 module.exports = router;
