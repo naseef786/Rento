@@ -15,7 +15,7 @@ var app = express();
 const handlebars = require('handlebars');
 const {equal,profit}  =require("./hbshelper/helper")
 const { Users } = require('./model/user_Schema');
-
+const flash = require('express-flash');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
@@ -40,7 +40,7 @@ handlebars.registerHelper('equal', function(a, b, options) {
 const Handlebars = require('handlebars');
 Handlebars.registerHelper('equal', helpers.equal);
 
-
+app.use(flash());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

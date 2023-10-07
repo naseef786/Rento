@@ -27,10 +27,12 @@ const {
       getOrders,
       deleteOrder,
       UpdateProfile,
-      orderSuccess,
+      orderSuccessCOD,
       wishlistCount,
-      orderSuccessVerified,
+      orderSuccessOnline,
       getAllCategory,
+      paymentVerified,
+      
       
      
 } = require("../controller/user");
@@ -76,14 +78,16 @@ router.get('/checkout',userCart,ifUser,checkoutPage)
 router.post('/checkout',ifUser,checkoutPage)
 router.get('/proceedOrder',userCart,ifUser,placeOrder)
 router.post('/placeOrder',ifUser,placeOrder)
+router.get('/thank-you',orderSuccessCOD)
+
+//orders
 router.get('/viewOrders',ifUser,getOrders)
 router.post('/cancelOrder/:id',ifUser,deleteOrder)
 
-
 //logout
 router.post('/logout',userLogout)
-router.post('/success',ifUser,orderSuccess)
-router.get('/confirmation/:id',ifUser,orderSuccessVerified)
+router.post('/success',ifUser,orderSuccessOnline)
+router.get('/confirmation/:id',paymentVerified)
 
 
 

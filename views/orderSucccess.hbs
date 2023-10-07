@@ -1,10 +1,16 @@
-
-<section class="h-100 h-custom" style="background-color: #eee;">
-  <div class="container py-5 h-100">
-    {{data}}
-    <button type="button" class="btn btn-lg btn-primary" disabled><a href="/">back to Home</a> </button>
+<main>
+<div class="page-wrapper">
+<section class="h-100 h-custom" style="background-color: #5c5b63;">
+  <div class="container py-5 h-100"data    <button type="button" class="btn btn-lg btn-primary" disabled><a href="/">back to Home</a> </button>>
+  
     <div class="row d-flex justify-content-center align-items-center h-100">
       <div class="col-lg-8 col-xl-6">
+        {{#if successFlash}}
+    <div class="alert alert-success">
+        {{successFlash}}
+    </div>
+{{/if}}
+<h1>Thank You!</h1>
         <div class="card border-top border-bottom border-3" style="border-color: #f37a27 !important;">
           <div class="card-body p-5">
 
@@ -13,7 +19,7 @@
             <div class="row">
               <div class="col mb-3">
                 <p class="small text-muted mb-1">Date</p>
-                <p>{{order.updatedAt}}</p>
+                <p>{{order.orderDate}}</p>
               </div>
               <div class="col mb-3">
                 <p class="small text-muted mb-1">Order No.</p>
@@ -24,12 +30,6 @@
             <div class="mx-n5 px-5 py-4" style="background-color: #f2f2f2;">
               <div class="row">
 
-                <div class="col-md-8 col-lg-9">
-                  <p>BEATS Solo 3 Wireless Headphones</p>
-                </div>
-                <div class="col-md-4 col-lg-3">
-                  <p>£299.99</p>
-                </div>
 {{#each order.products}}
   
     {{#each this}}
@@ -38,7 +38,7 @@
                   <p>{{this.productName}}</p>
                 </div>
                 <div class="col-md-4 col-lg-3">
-                  <p> {{this.price}} X Quantity : {{this.quantity}}</p>
+                  <p> {{this.price}} X Quantity : {{this.quantity}} X days : {{this.daysOfRent}}</p>
                 </div>
               
                {{/each}}
@@ -109,5 +109,8 @@
     </div>
   </div>
 </section>
+</div>
+</main>
 
-{{order.couponApplied}} 
+
+

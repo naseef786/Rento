@@ -19,6 +19,39 @@ const { error } = require("console")
 
 
 
+const validatePasswordStrength = (password) => {
+    // Define your custom password strength rules here
+    // For example, you can check for minimum length, presence of special characters, etc.
+
+    const minLength = 8;
+    const hasSpecialCharacter = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasDigit = /[0-9]/.test(password);
+
+    if (password.length < minLength) {
+        return 'Password must be at least 8 characters long.';
+    }
+
+    if (!hasSpecialCharacter) {
+        return 'Password must contain at least one special character.';
+    }
+
+    if (!hasUpperCase) {
+        return 'Password must contain at least one uppercase letter.';
+    }
+
+    if (!hasLowerCase) {
+        return 'Password must contain at least one lowercase letter.';
+    }
+
+    if (!hasDigit) {
+        return 'Password must contain at least one digit.';
+    }
+
+    return null; // Password meets all criteria
+};
+
 
 // home page
 const homePage = async (req, res) => {
@@ -42,7 +75,15 @@ const userLogin = (req, res) => {
 }
 const userSignup = async (req, res, next) => {
     try {
-        console.log(req.body);
+
+        const passwordError = validatePasswordStrength(password);
+console.log(passwordError);
+        if (passwordError) {
+            req.flash('error', passwordError);
+         res.render('userLogin',passwordError); // Redirect to signup page
+        }
+else{
+      console.log(req.body);
         const user = new Users({
             name: req.body.name,
             email: req.body.email,
@@ -53,6 +94,7 @@ const userSignup = async (req, res, next) => {
             console.log(result);
             res.redirect('/login');
         })
+    }
     }
     catch (err) {
         next(err);
@@ -492,12 +534,12 @@ const placeOrder = async (req, res) => {
         })
         order = order.save().then(async (data) => {
             const orderId = data._id.toString()
-            console.log(orderId);
+            
             req.session.orderdata = data;
             try {
                 if (data.payment == 'COD') {
                     await Users.updateOne({ _id: user_id }, { $set: { cart: [] } })
-                    console.log(data);
+                    
                     await Products.findOne().then(async productsIn => {
                         for (let i = 0; i < user.cart.length; i++) {
                             for (let j = 0; j < productsIn.length; j++) {
@@ -512,11 +554,13 @@ const placeOrder = async (req, res) => {
                         console.log(err);
                         res.redirect('/')
                     })
-                    // res.json({ status: true })
-                    res.render('orderSucccess', {
-                        data,
-                        layout: "partials/mainlayout"
-                    })
+                
+                       // Set a success flash message
+        req.flash('success', 'Order placed successfully!');
+
+        // Redirect to a thank-you page
+        res.redirect(`/thank-you?orderId=${data.orderId}`);
+
                 }
                 else {
                     let amount = grandTotal
@@ -548,7 +592,7 @@ const placeOrder = async (req, res) => {
         res.status(500).send(error);
     }
 }
-let orderSuccess = async (req, res, next) => {
+let orderSuccessOnline = async (req, res, next) => {
     const order_id = req.body.order_id;
     const payment_id = req.body.payment_id;
     const signature = req.body.signature;
@@ -605,8 +649,20 @@ let orderSuccess = async (req, res, next) => {
         next(error)
     }
 }
-const orderSuccessVerified = async (req, res) => {
+const orderSuccessCOD= async (req, res) => {
+    let id = req.query.orderId
+     console.log(id);
+    let order = await Order.findOne({orderId:id})
+    console.log(order);
+    res.render('orderSucccess', {
+        order, successFlash: req.flash('success'),
+        layout: "partials/mainlayout"
+    })
+
+}
+const paymentVerified = async (req, res) => {
     let id = req.params.id
+    console.log("hello");
     let order = await Order.findById(id).populate('products.Object').exec()
     res.render('orderSucccess', {
         order,
@@ -617,7 +673,7 @@ const orderSuccessVerified = async (req, res) => {
 
 //manage orders
 const deleteOrder = async (req, res) => {
-    Order.findByIdAndUpdate(req.params.id).then(async order => {
+   await Order.findByIdAndUpdate(req.params.id).then(async order => {
         if (order) {
 
             order.set({ orderStatus: "cancelled" })
@@ -698,7 +754,8 @@ module.exports = {
     getOrderCount,
     getOrders,
     deleteOrder,
-    orderSuccess,
-    orderSuccessVerified,
+    orderSuccessCOD,
+    orderSuccessOnline,
     getAllCategory,
+    paymentVerified
 }

@@ -13,8 +13,14 @@
 							        <a class="nav-link active" id="register-tab-2" data-toggle="tab" href="#register-2" role="tab" aria-controls="register-2" aria-selected="true">Register</a>
 							    </li>
 							</ul>
+									{{#if messages.error}}
+    <div class="alert alert-danger">{{messages.error}}</div>
+{{/if}}
 							<div class="tab-content">
 							    <div class="tab-pane fade" id="signin-2" role="tabpanel" aria-labelledby="signin-tab-2">
+									{{#if messages.error}}
+    <div class="alert alert-danger">{{messages.error}}</div>
+{{/if}}
 							    	<form action="/login" method="post">
 							    		<div class="form-group">
 							    			<label for="singin-email-2">Username or email address *</label>
