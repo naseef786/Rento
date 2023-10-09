@@ -4,23 +4,22 @@
             <div class="login-page bg-image pt-8 pb-8 pt-md-12 pb-md-12 pt-lg-17 pb-lg-17" style="background-image: url(/assets/images/demos/demo-22/banner/banner-1.jpg);">
             	<div class="container">
             		<div class="form-box">
+							{{#if messages.error}}
+    <div class="alert alert-danger">{{messages.error}}</div>
+{{/if}}
             			<div class="form-tab">
 	            			<ul class="nav nav-pills nav-fill" role="tablist">
 							    <li class="nav-item">
-							        <a class="nav-link" id="signin-tab-2" data-toggle="tab" href="#signin-2" role="tab" aria-controls="signin-2" aria-selected="false">Sign In</a>
+							        <a class="nav-link active" id="signin-tab-2" data-toggle="tab" href="#signin-2" role="tab" aria-controls="signin-2" aria-selected="true">Sign In</a>
 							    </li>
 							    <li class="nav-item">
-							        <a class="nav-link active" id="register-tab-2" data-toggle="tab" href="#register-2" role="tab" aria-controls="register-2" aria-selected="true">Register</a>
+							        <a class="nav-link " id="register-tab-2" data-toggle="tab" href="#register-2" role="tab" aria-controls="register-2" aria-selected="false">Register</a>
 							    </li>
 							</ul>
-									{{#if messages.error}}
-    <div class="alert alert-danger">{{messages.error}}</div>
-{{/if}}
+								
 							<div class="tab-content">
-							    <div class="tab-pane fade" id="signin-2" role="tabpanel" aria-labelledby="signin-tab-2">
-									{{#if messages.error}}
-    <div class="alert alert-danger">{{messages.error}}</div>
-{{/if}}
+							    <div class="tab-pane fade show active" id="signin-2" role="tabpanel" aria-labelledby="signin-tab-2">
+								
 							    	<form action="/login" method="post">
 							    		<div class="form-group">
 							    			<label for="singin-email-2">Username or email address *</label>
@@ -45,7 +44,7 @@
 							    	</form>
 							    	
 							    </div><!-- .End .tab-pane -->
-							    <div class="tab-pane fade show active" id="register-2" role="tabpanel" aria-labelledby="register-tab-2">
+							    <div class="tab-pane fade " id="register-2" role="tabpanel" aria-labelledby="register-tab-2">
 							    	<form action="/signup" method="post" >
 							    		<div class="form-group">
 							    			<label for="register-email-2">Your email address *</label>

@@ -75,31 +75,37 @@ const userLogin = (req, res) => {
 }
 const userSignup = async (req, res, next) => {
     try {
+        console.log(req.body);
+        const { name, email, password, mobile } = req.body
 
-        const passwordError = validatePasswordStrength(password);
-console.log(passwordError);
-        if (passwordError) {
-            req.flash('error', passwordError);
-         res.render('userLogin',passwordError); // Redirect to signup page
-        }
-else{
-      console.log(req.body);
-        const user = new Users({
-            name: req.body.name,
-            email: req.body.email,
-            mobile: req.body.mobile,
-            password: req.body.password
+        await Users.findOne({ email: email }).then((data) => {
+            if (data) {
+                req.flash('error', 'email already registered');
+            } else {
+                const passwordError = validatePasswordStrength(password);
+                if (passwordError) {
+                    req.flash('error', passwordError);
+                } else {
+                    // ...
+                    const user = new Users({
+                        name: name,
+                        email: email,
+                        mobile: mobile,
+                        password: password
+                    });
+                    user.save()
+                    req.flash('success', 'registration completed successfully');
+                }
+            }
+            res.redirect('/login'); // Redirect to signup page
         });
-        user.save().then(result => {
-            console.log(result);
-            res.redirect('/login');
-        })
-    }
     }
     catch (err) {
         next(err);
     }
 }
+
+
 const postSignIn = async (req, res) => {
     try {
         console.log(req.body);
@@ -107,7 +113,8 @@ const postSignIn = async (req, res) => {
         let PASS = req.body.password;
         const user = await Users.findOne({ email: Email })
         if (!user) {
-            console.log('invalid Email');
+            req.flash('error', "please enter your registered email");
+
             res.redirect('/login')
         }
         if (user) {
@@ -122,7 +129,7 @@ const postSignIn = async (req, res) => {
                 res.redirect('/');
             }
             else {
-
+                req.flash('error', "please enter valid password");
                 res.redirect('/login')
             }
         }
@@ -134,14 +141,14 @@ const postSignIn = async (req, res) => {
 
 
 //products
-const productDetails = async (req, res) => {
+const productDetails = async (req, res, next) => {
     try {
         console.log(req.params);
         let id = req.params.id;
         await Products.findOne({ _id: id }).then(data => res.render('product', { data, layout: "partials/mainlayout" }))
     }
     catch (err) {
-        console.log(err);
+        next(err);
     }
 }
 let getSearch = async (req, res) => {
@@ -499,7 +506,7 @@ const placeOrder = async (req, res) => {
         if (coup) {
             coup.users.push(user_id)
             coup.quantity--
-            coup.save();
+          await  coup.save();
         }
         const user = await Users.findOne({ _id: user_id })
         let Cart = user.cart
@@ -508,17 +515,12 @@ const placeOrder = async (req, res) => {
         const totalPrice = user.cart.reduce((total, item) => {
             return total + item.total
         }, 0);
-
         // Calculate the total amount with discount
         let grandTotal = totalPrice;
         if (coup) {
             const discountAmount = totalPrice * coup.percentDiscount / 100;
             grandTotal -= discountAmount;
         }
-
-
-
-
         let order = new Order({
             products: items,
             Address: AddressObj,
@@ -534,34 +536,34 @@ const placeOrder = async (req, res) => {
         })
         order = order.save().then(async (data) => {
             const orderId = data._id.toString()
-            
             req.session.orderdata = data;
             try {
-                if (data.payment == 'COD') {
-                    await Users.updateOne({ _id: user_id }, { $set: { cart: [] } })
-                    
-                    await Products.findOne().then(async productsIn => {
-                        for (let i = 0; i < user.cart.length; i++) {
-                            for (let j = 0; j < productsIn.length; j++) {
-                                if (user.cart[i].product == productsIn[j]._id) {
-                                    const currentCount = productsIn[j].countInStock - user.cart[i].quantity
+                if (data.payment === 'COD') {
+                    try {
+                        const user = await Users.findByIdAndUpdate(user_id);
+                        const productsIn = await Products.find();
+                        for (const cartItem of user.cart) {
+                            for (const product of productsIn) {
+                                if (cartItem.product.toString() === product._id.toString()) {
+                                    const currentCount = product.countInStock - cartItem.quantity;
                                     console.log(currentCount, "llllllllllllllllll");
-                                    await Products.findOneAndUpdate({ _id: productsIn[j]._id }, { $set: { countInStock: currentCount } })
+                                    await Products.findByIdAndUpdate(product._id, { $set: { countInStock: currentCount } });
                                 }
                             }
                         }
-                    }).catch(err => {
-                        console.log(err);
-                        res.redirect('/')
-                    })
-                
-                       // Set a success flash message
-        req.flash('success', 'Order placed successfully!');
-
-        // Redirect to a thank-you page
-        res.redirect(`/thank-you?orderId=${data.orderId}`);
-
+                        user.cart = [];
+                        user.orders.push(data._id);
+                        await user.save();
+                        // Set a success flash message
+                        req.flash('success', 'Order placed successfully!');
+                        // Redirect to a thank-you page
+                        res.redirect(`/thank-you?orderId=${data.orderId}`);
+                    } catch (error) {
+                        console.error(error);
+                        res.redirect('/');
+                    }
                 }
+
                 else {
                     let amount = grandTotal
                     req.session.amount = totalPrice * 100
@@ -615,25 +617,24 @@ let orderSuccessOnline = async (req, res, next) => {
             })
             await order.save();
             const userId = req.session.user_id
-            let user = await Users.findByIdAndUpdate(userId).then(async user => {
-                await Products.find().then(async (productsIn) => {
-                    for (let i = 0; i < user.cart.length; i++) {
-                        for (let j = 0; j < productsIn.length; j++) {
-                            if (user.cart[i].product == productsIn[j]._id) {
-                                const currentCount = productsIn[j].countInStock - user.cart[i].quantity
-                                console.log(currentCount, "llllllllllllllllll");
-                                await Products.findOneAndUpdate({ _id: productsIn[j]._id }, { $set: { countInStock: currentCount } })
-                            }
-                        }
+        
+            const user = await Users.findByIdAndUpdate(userId);
+            const productsIn = await Products.find();
+            for (const cartItem of user.cart) {
+                for (const product of productsIn) {
+                    if (cartItem.product.toString() === product._id.toString()) {
+                        const currentCount = product.countInStock - cartItem.quantity;
+                        console.log(currentCount, "llllllllllllllllll");
+                        await Products.findByIdAndUpdate(product._id, { $set: { countInStock: currentCount } });
                     }
-                }).catch(err => {
-                    console.log(err);
-                    res.redirect('/')
-                })
+                }
+            }
+
+
                 user.set({ cart: [] })
                 user.orders.push(order._id)
                 user.save()
-            })
+        
             res.json({
                 payment: true,
                 orderid: req.session.orderdata._id,
@@ -649,10 +650,10 @@ let orderSuccessOnline = async (req, res, next) => {
         next(error)
     }
 }
-const orderSuccessCOD= async (req, res) => {
+const orderSuccessCOD = async (req, res) => {
     let id = req.query.orderId
-     console.log(id);
-    let order = await Order.findOne({orderId:id})
+    console.log(id);
+    let order = await Order.findOne({ orderId: id })
     console.log(order);
     res.render('orderSucccess', {
         order, successFlash: req.flash('success'),
@@ -673,7 +674,7 @@ const paymentVerified = async (req, res) => {
 
 //manage orders
 const deleteOrder = async (req, res) => {
-   await Order.findByIdAndUpdate(req.params.id).then(async order => {
+    await Order.findByIdAndUpdate(req.params.id).then(async order => {
         if (order) {
 
             order.set({ orderStatus: "cancelled" })
@@ -698,25 +699,43 @@ const getOrderCount = async (req, res) => {
         orderCount: orderCount
     });
 }
-const getOrders = async (req, res) => {
-    let userId = req.session.user_id
-    let user = await Users.findOne({ _id: userId }, { orderStatus: 'cancelled' })
-    const currentUser = await Users.findById(req.session.user_id)
-    const orders = currentUser.orders;
+// const getOrders = async (req, res) => {
+//     let userId = req.session.user_id
 
-    // fetch the product details for each product id in the wishlist array
-    const allOrders = [];
-    for (let i = 0; i < orders.length; i++) {
-        const order = await Order.findById(orders[i]).exec();
-        allOrders.push(order);
+//     const currentUser = await Users.findById(userId)
+//     const orders = currentUser.orders;
+
+//     // fetch the product details for each product id in the wishlist array
+//     const allOrders = [];
+//     for (let i = 0; i < orders.length; i++) {
+//         const order = await Order.findById(orders[i]).exec();
+//         allOrders.push(order);
+//     }
+//     console.log(allOrders);
+
+
+
+//     res.render("orderPage", { layout: "partials/mainlayout", allOrders, user: currentUser });
+// }
+
+const getOrders = async (req, res, next) => {
+    try {
+        let userId = req.session.user_id;
+        const currentUser = await Users.findById(userId);
+        const orders = currentUser.orders;
+
+        const orderPromises = orders.map(orderId => Order.findById(orderId).exec());
+        const allOrders = await Promise.all(orderPromises);
+
+        console.log(allOrders);
+
+        res.render("orderPage", { layout: "partials/mainlayout", allOrders, user: currentUser });
+    } catch (error) {
+        console.error(error);
+        next(error)
+        // Handle the error (e.g., display an error page or send an error response)
     }
-    console.log(allOrders);
-
-
-
-    res.render("orderPage", { layout: "partials/mainlayout", allOrders, user: user });
 }
-
 
 // user logout
 const userLogout = (req, res) => {

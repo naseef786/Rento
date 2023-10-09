@@ -1,12 +1,15 @@
 const mongoose = require('mongoose');
 
+async function connect() {
+    try {
+        await mongoose.connect(process.env.ATLAS_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+        console.log('Connected to the database Atlas');
+    } catch (error) {
+        console.error('Error connecting to the database:', error);
+    }
+}
 
-mongoose.set('strictQuery', false);
-mongoose.connect("mongodb://127.0.0.1:27017/Rento",{useNewUrlParser: true , useUnifiedTopology:true});
-var db = mongoose.connection;
-db.on("error", function(error){ console.log(error);});
-db.once('open',()=>{console.log("connected to database"); });
-
-
-
-
+module.exports = connect;

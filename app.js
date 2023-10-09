@@ -6,7 +6,7 @@ var bodyParser = require('body-parser')
 var logger = require('morgan');
 const session = require("express-session");
 const nocache = require("nocache");
-const db = require("./config/server");
+const connect = require('./config/server')
 var adminRouter = require('./routes/admin');
 var userRouter = require('./routes/user');
 const hbs = require("hbs");
@@ -25,6 +25,9 @@ hbs.registerHelper('limit', function(arr, limit) {
   if (!Array.isArray(arr)) { return []; }
   return arr.slice(0, limit);
 });
+
+require('dotenv').config();
+
 
 const helpers = require('handlebars-helpers')();
 
@@ -50,13 +53,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static('public/images/uploads'))
 hbs.registerHelper("equal",equal)
 hbs.registerHelper("profit",profit)
-
 app.use(bodyParser.urlencoded({extended:true}))
 
 
 
 
-
+connect()
 
 app.use(
   session({
@@ -81,15 +83,20 @@ app.use(function(req, res, next) {
   next(createError(404));
 });
 
+
+
+
+
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
+  console.error(err.stack); 
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
-  res.status(err.status || 500 || 404);
-  res.render('404');
+  const statusCode = err.status || 500 || 404
+  res.status(statusCode).render('404', { statusCode, message, layout: "partials/mainlayout" });
 });
 
 module.exports = app;
