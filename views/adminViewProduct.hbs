@@ -15,12 +15,13 @@
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/">Home</a></li>
                       
-                        <li class="breadcrumb-item active" aria-current="page">Wishlist</li>
+                        <li class="breadcrumb-item active" aria-current="page">products</li>
                     </ol>
                 </div><!-- End .container -->
             </nav><!-- End .breadcrumb-nav -->
 
             <div class="page-content">
+				{{#if items}}
             	<div class="container">
 					<table class="table table-wishlist table-mobile">
 						<thead>
@@ -73,6 +74,11 @@
 					</table><!-- End .table table-wishlist -->
 	        
             	</div><!-- End .container -->
+				{{else}}
+				<div class="container">
+				<h3>no products available right now</h3>
+				</div>
+{{/if}}
             </div><!-- End .page-content -->
 			
         </main><!-- End .main -->

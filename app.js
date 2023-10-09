@@ -96,7 +96,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   const statusCode = err.status || 500 || 404
-  res.status(statusCode).render('404', { statusCode, message, layout: "partials/mainlayout" });
+  res.status(statusCode).render('404', { statusCode,  layout: "partials/mainlayout" });
 });
 
 module.exports = app;

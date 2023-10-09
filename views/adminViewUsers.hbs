@@ -14,7 +14,7 @@
                     </ol>
                 </div><!-- End .container -->
             </nav><!-- End .breadcrumb-nav -->
-
+{{#if user}}
             <div class="page-content">
             	<div class="container">
 					<table class="table table-wishlist table-mobile">
@@ -63,5 +63,9 @@
 	        
             	</div><!-- End .container -->
             </div><!-- End .page-content -->
-			
+			{{else}}
+			<div class="container">
+				<h3>no users have been rergistered yet</h3>
+			</div>
+			{{/if}}
         </main><!-- End .main -->

@@ -3,7 +3,7 @@
         <main class="main">
            
             <div class="container">
-              
+             {{#if  product_list}} 
   <div class="row">
     {{#each product_list}}
       <div class="col-md-4">
@@ -18,5 +18,8 @@
       </div>
     {{/each}}
   </div>
+  {{#else}}
+     <div>products are not available</div>
+          {{/if}}
             </div>
           </main></div>
