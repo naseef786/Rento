@@ -2,7 +2,7 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
 var logger = require('morgan');
 const session = require("express-session");
 const nocache = require("nocache");
@@ -54,8 +54,6 @@ app.use(express.static('public/images/uploads'))
 hbs.registerHelper("equal",equal)
 hbs.registerHelper("profit",profit)
 app.use(bodyParser.urlencoded({extended:true}))
-
-
 
 
 connect()
