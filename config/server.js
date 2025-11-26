@@ -6,7 +6,7 @@ async function connect() {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        console.log('Connected to the database Atlas');
+        console.log('Connected to the database Mongodb Atlas');
     } catch (error) {
         console.error('Error connecting to the database:', error);
     }
