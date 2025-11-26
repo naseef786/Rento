@@ -38,10 +38,10 @@ const {
 } = require("../controller/user");
 
 //login and sign in
+router.get('/',homePage);
 router.post('/signup',userSignup)
 router.post('/login',postSignIn)
 router.get('/login',ifUserLogout,userLogin);
-router.get('/',homePage);
 
 //pages
 router.get('/faq',faqPage)
